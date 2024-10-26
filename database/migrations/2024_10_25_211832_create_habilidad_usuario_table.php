@@ -11,9 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('roles', function (Blueprint $table) {
+        Schema::create('habilidad_usuario', function (Blueprint $table) {
             $table->id();
-            $table->enum('nombre',['ALUMNO', 'ADMIN', 'DEV','EMPRESA']);
+            $table->foreignId('usuario_id')->constrained('usuarios'); // Clave foránea de usuarios
+            $table->foreignId('habilidad_id')->constrained('habilidades'); // Clave foránea de habilidades
         });
     }
 
@@ -22,6 +23,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('roles');
+        Schema::dropIfExists('habilidad_usuario');
     }
 };

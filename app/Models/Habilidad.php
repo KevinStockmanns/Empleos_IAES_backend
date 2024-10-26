@@ -12,6 +12,6 @@ class Habilidad extends Model
     protected $fillable = ['nombre', 'tipo'];
 
     public function usuarios(){
-        return $this->hasMany(Usuario::class);
+        return $this->belongsToMany(Usuario::class, 'habilidad_usuario');
     }
 }

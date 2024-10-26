@@ -22,7 +22,6 @@ return new class extends Migration
             $table->string('foto_perfil');
             $table->boolean('estado')->default(true);
             $table->foreignId("rol_id")->constrained('roles');
-            $table->foreignId('habilidad_id')->constrained('habilidades');
         });
     }
 

@@ -16,10 +16,20 @@ class Usuario extends Model
     {
         return $this->belongsTo(Rol::class);
     }
-    public function habilidad(){
-        return $this->belongsTo(Habilidad::class);
+    public function habilidades(){
+        return $this->belongsToMany(Habilidad::class, 'habilidad_usuario');
     }
     public function licenciaConducir(){
         return $this->hasOne(LicenciaConducir::class);
+    }
+    public function perfilProfesional(){
+        return $this->hasOne(PerfilProfesional::class);
+    }
+    public function experienciasLaborales(){
+        return $this->hasMany(ExperienciaLaboral::class);
+    }
+
+    public function direccion(){
+        return $this->hasOne(Direccion::class);
     }
 }

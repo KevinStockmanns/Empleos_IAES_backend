@@ -11,9 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('roles', function (Blueprint $table) {
+        Schema::create('perfil_profesional', function (Blueprint $table) {
             $table->id();
-            $table->enum('nombre',['ALUMNO', 'ADMIN', 'DEV','EMPRESA']);
+            $table->string('cargo');
+            $table->text('carta_presentación');
+            $table->string('cv');
+            $table->foreignId('usuario_id')->constrained('usuarios');
         });
     }
 
@@ -22,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('roles');
+        Schema::dropIfExists('perfil_profesional');
     }
 };

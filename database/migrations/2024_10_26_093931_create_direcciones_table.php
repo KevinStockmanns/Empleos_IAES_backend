@@ -4,17 +4,18 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
+return new class extends Migration {
     /**
      * Run the migrations.
      */
     public function up(): void
     {
-        Schema::create('licencias_conducir', function (Blueprint $table) {
+        Schema::create('direcciones', function (Blueprint $table) {
             $table->id();
-            $table->enum('categoria', ['A1', 'A2','A3','B1','B2','C1','C2','C3','D1','D2','D3','D4','E1','E2','F','G1','G2','G3','']);
-            $table->boolean('vehiculo_propio');
+            $table->string('calle');
+            $table->string('numero', 30);
+            $table->string('piso')->nullable();
+            $table->foreignId('localidad_id')->constrained('localidades');
             $table->foreignId('usuario_id')->constrained('usuarios');
         });
     }
@@ -24,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('licencias_conducir');
+        Schema::dropIfExists('direcciones');
     }
 };

@@ -11,10 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('licencias_conducir', function (Blueprint $table) {
+        Schema::create('experiencias_laborales', function (Blueprint $table) {
             $table->id();
-            $table->enum('categoria', ['A1', 'A2','A3','B1','B2','C1','C2','C3','D1','D2','D3','D4','E1','E2','F','G1','G2','G3','']);
-            $table->boolean('vehiculo_propio');
+            $table->string('puesto');
+            $table->string('empresa');
+            $table->text('descripcion');
+            $table->date('fecha_inicio')->nullable(false);
+            $table->date('fecha_terminacion');
+            $table->string('contacto');
             $table->foreignId('usuario_id')->constrained('usuarios');
         });
     }
@@ -24,6 +28,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('licencias_conducir');
+        Schema::dropIfExists('experiencias_laborales');
     }
 };

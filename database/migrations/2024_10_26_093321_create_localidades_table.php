@@ -11,9 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('roles', function (Blueprint $table) {
+        Schema::create('localidades', function (Blueprint $table) {
             $table->id();
-            $table->enum('nombre',['ALUMNO', 'ADMIN', 'DEV','EMPRESA']);
+            $table->string('nombre',150);
+            $table->string('codigo_postal',30);
+            $table->foreignId('provincia_id')->constrained('provincias');
         });
     }
 
@@ -22,6 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('roles');
+        Schema::dropIfExists('localidades');
     }
 };
