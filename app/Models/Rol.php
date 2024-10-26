@@ -9,7 +9,11 @@ class Rol extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['nombre', 'descripcion'];
+    protected $fillable = ['nombre'];
+
+// Desactiva los timestamps automáticos
+    public $timestamps = false;
+    protected $table = 'roles';
 
     // Definir la relación: un rol tiene muchos usuarios
     public function users()
