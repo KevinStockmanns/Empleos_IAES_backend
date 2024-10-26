@@ -20,7 +20,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 
-Route::prefix('/v1')->group(function(){
-    Route::get("/usuarios", [UsuarioController::class, 'miMetodo']);
-
+Route::prefix('/v1/usuarios')->group(function(){
+    Route::get("/", [UsuarioController::class, 'miMetodo']);
+    Route::post("/", [UsuarioController::class, 'registrarUsuario']);
 });

@@ -2,7 +2,10 @@
 
 namespace App\Exceptions;
 
+use Illuminate\Contracts\Validation\ValidatesWhenResolved;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Illuminate\Validation\ValidationException;
+use Log;
 use Throwable;
 
 class Handler extends ExceptionHandler
@@ -24,7 +27,42 @@ class Handler extends ExceptionHandler
     public function register(): void
     {
         $this->reportable(function (Throwable $e) {
-            //
+            Log::error($e->getMessage(), [
+                'exception' => $e
+            ]);
         });
+    }
+
+    public function render($request, Throwable $exception)
+    {
+        // Manejo específico para MethodNotAllowedHttpException
+        if ($exception instanceof MethodNotAllowedHttpException) {
+            return response()->json([
+                'error' => 'Método no permitido.',
+                'status' => 'fail',
+                'supported_methods' => $exception->getAllowedMethods(),
+            ], 405);
+        }
+
+        // Manejo específico para NotFoundHttpException
+        if ($exception instanceof NotFoundHttpException) {
+            return response()->json([
+                'error' => 'Ruta no encontrada.',
+                'status' => 'fail',
+            ], 404);
+        }
+
+        if ($exception instanceof ValidationException){
+            return response()->json([
+                'message'=>'errores de validación',
+                'errores'=> $exception->errors(),
+            ], 404);
+        }
+
+        return response()->json([
+            'error' => 'Ocurrió un error inesperado.',
+            'status' => 'error',
+            'e'=>$exception->getTrace(),
+        ], 500);
     }
 }

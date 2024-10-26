@@ -17,9 +17,8 @@ return new class extends Migration
             $table->string('apellido',50);
             $table->string('dni',20)->unique();
             $table->string('correo')->unique();
-            $table->dateTime('nacimiento');
+            $table->dateTime('fecha_nacimiento');
             $table->string('clave');
-            $table->string('foto_perfil');
             $table->boolean('estado')->default(true);
             $table->foreignId("rol_id")->constrained('roles');
         });
