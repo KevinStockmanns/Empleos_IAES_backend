@@ -3,11 +3,17 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\RegistrarUsuarioRequest;
+use App\Services\UsuarioService;
 use Illuminate\Http\Request;
 
 class UsuarioController extends Controller
 {
-    //
+    protected $usuarioService;
+    public function __construct(UsuarioService $usuarioService)
+    {
+        $this->usuarioService = $usuarioService;
+    }
+
     public function miMetodo()
     {
         return response()->json([
@@ -18,7 +24,7 @@ class UsuarioController extends Controller
 
 
     public function registrarUsuario(RegistrarUsuarioRequest $request){
-        $data = $request->validated();
-        return response()->json($data);
+        $usuario = $this->usuarioService->registrar($request);
+        return response()->json($usuario);
     }
 }

@@ -9,7 +9,10 @@ class Usuario extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['nombre', 'apellido', 'nacimiento', 'dni', 'correo', 'clave'];
+    protected $table = 'usuarios';
+    public $timestamps = false;
+
+    protected $fillable = ['nombre', 'apellido', 'fecha_nacimiento', 'dni', 'correo', 'clave', 'rol_id'];
 
     // Definir la relación: un usuario tiene un rol
     public function rol()
