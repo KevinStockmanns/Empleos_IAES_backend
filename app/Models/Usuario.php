@@ -12,7 +12,7 @@ class Usuario extends Model
     protected $table = 'usuarios';
     public $timestamps = false;
 
-    protected $fillable = ['nombre', 'apellido', 'fecha_nacimiento', 'dni', 'correo', 'clave', 'rol_id'];
+    protected $fillable = ['nombre', 'apellido', 'fecha_nacimiento', 'dni', 'correo', 'clave','estado'];
 
     // Definir la relación: un usuario tiene un rol
     public function rol()

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Exceptions\CustomException;
 use App\Http\Requests\RegistrarUsuarioRequest;
 use App\Services\UsuarioService;
 use Illuminate\Http\Request;
@@ -23,8 +24,20 @@ class UsuarioController extends Controller
     }
 
 
-    public function registrarUsuario(RegistrarUsuarioRequest $request){
+    public function registrarUsuario(RegistrarUsuarioRequest $request)
+    {
         $usuario = $this->usuarioService->registrar($request);
+        return response()->json($usuario);
+    }
+
+    public function obtenerUsuario($id)
+    {
+        $usuario = $this->usuarioService->obtenerById($id);
+
+        if (!$usuario) {
+            throw new CustomException('Usuario no encontrado en la base de datos', 404);
+        }
+
         return response()->json($usuario);
     }
 }

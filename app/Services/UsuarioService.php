@@ -15,15 +15,23 @@ class UsuarioService{
         $rol = Rol::firstOrCreate([
             'nombre'=> RolEnum::ALUMNO->value,
         ]);
-        $usuario = Usuario::create([
+        $usuario = new Usuario([
             'nombre' => $data['nombre'],
             'apellido' => $data['apellido'],
             'correo' => $data['correo'],
             'fecha_nacimiento' => Carbon::createFromFormat('Y-m-d', $data['fechaNacimiento']),
             'clave' => $data['clave'],
             'dni' => $data['dni'],
-            'rol_id' => $rol->id,
+            'estado'=> $data['estado'],
         ]);
+        
+        $usuario->rol_id = $rol->id;
+        
+        $usuario->save();
         return $usuario;
+    }
+
+    public function obtenerById($id){
+        return Usuario::find($id);
     }
 }
