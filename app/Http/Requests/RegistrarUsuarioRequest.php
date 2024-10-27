@@ -2,7 +2,9 @@
 
 namespace App\Http\Requests;
 
+use App\Enums\EstadoUsuarioEnum;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class RegistrarUsuarioRequest extends FormRequest
 {
@@ -13,6 +15,14 @@ class RegistrarUsuarioRequest extends FormRequest
     {
         return true;
     }
+
+    protected function prepareForValidation()
+    {
+        $this->merge([
+            'estado' => strtoupper($this->input('estado')),
+        ]);
+    }
+
 
     /**
      * Get the validation rules that apply to the request.
@@ -26,11 +36,15 @@ class RegistrarUsuarioRequest extends FormRequest
             [
                 'nombre'=>'required|min:3|max:100|regex:/^[a-zA-Z\sñÑáéíóúÁÉÍÓÚ]+$/',
                 'apellido'=>'required|min:3|max:100|regex:/^[a-zA-Z\sñÑáéíóúÁÉÍÓÚ]+$/',
-                'correo'=>'required|email',
-                'fechaNacimiento'=>'required|before_or_equal:' . now()->subYears(18)->toDateString(),
+                'correo'=>'required|email|unique:usuarios,correo',
+                'fechaNacimiento'=>'before_or_equal:' . now()->subYears(18)->toDateString(),
                 'clave'=>'required|min:8|max:20|regex:/^[a-zA-ZñÑ\-_0-9]+$/',
-                'dni' => 'required|regex:/^[0-9]{7,12}$/'
-    
+                'dni' => 'required|regex:/^[0-9]{7,12}$/|unique:usuarios,dni',
+                'estado'=> [
+                    'required', 
+                    Rule::in(array_column(EstadoUsuarioEnum::cases(), 'value'))
+                ],
+                
             ],
             $ubicacion->rules()
         );
@@ -50,6 +64,7 @@ class RegistrarUsuarioRequest extends FormRequest
                 'apellido.regex'=> 'El apellido solo acepta letras y espacios en blanco',
                 'correo.required'=> 'El correo es requerido',
                 'correo.email'=> 'El correo es inválido',
+                'correo.unique'=>'El correo ya está en uso',
                 'fechaNacimiento.required'=>'La fecha de nacimiento es requerida',
                 'fechaNacimiento.date'=> 'La fecha de nacimiento es inválida',
                 'clave.required'=>'La clave es requerida',
@@ -59,6 +74,9 @@ class RegistrarUsuarioRequest extends FormRequest
                 'nacimiento.before_or_equal' => 'Debes ser mayor de 18 años.',
                 'dni.required'=>'El DNI es requerido',
                 'dni.regex'=>'DNI inválido',
+                'dni.unique'=>'El DNI ya está en uso',
+                'estado.required'=>'El estado es requerido',
+                'estado.in'=>'El estado debe ser uno de los siguientes valores: ' . implode(', ', array_column(EstadoUsuarioEnum::cases(), 'value')),
             ],
             $ubicacionRequest->rules(),
         );

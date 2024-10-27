@@ -1,5 +1,6 @@
 <?php
 
+use App\Enums\DisponibilidadEnum;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -16,6 +17,7 @@ return new class extends Migration
             $table->string('cargo');
             $table->text('carta_presentación');
             $table->string('cv');
+            $table->enum('disponibilidad', array_column(DisponibilidadEnum::cases(), 'value'));
             $table->foreignId('usuario_id')->constrained('usuarios');
         });
     }

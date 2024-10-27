@@ -1,5 +1,6 @@
 <?php
 
+use App\Enums\EstadoUsuarioEnum;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -19,7 +20,7 @@ return new class extends Migration
             $table->string('correo')->unique();
             $table->date('fecha_nacimiento');
             $table->string('clave');
-            $table->boolean('estado')->default(true);
+            $table->enum('estado',allowed:  array_column(EstadoUsuarioEnum::cases(), 'value'))->default(EstadoUsuarioEnum::PRIVADO->value);
             $table->foreignId("rol_id")->constrained('roles');
         });
     }
