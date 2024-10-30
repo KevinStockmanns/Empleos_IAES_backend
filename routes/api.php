@@ -22,5 +22,6 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 Route::prefix('/v1/usuarios')->group(function(){
     Route::get("/{id}", [UsuarioController::class, 'obtenerUsuario']);
+    Route::post("/login", [UsuarioController::class, 'loginUsuario']);
     Route::post("/", [UsuarioController::class, 'registrarUsuario']);
 });

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Exceptions\CustomException;
 use App\Http\Requests\RegistrarUsuarioRequest;
+use App\Http\Requests\Usuario\UsuarioLoginRequest;
 use App\Services\UsuarioService;
 use Illuminate\Http\Request;
 
@@ -39,5 +40,13 @@ class UsuarioController extends Controller
         }
 
         return response()->json($usuario);
+    }
+
+    public function loginUsuario(UsuarioLoginRequest $request){
+        $data = $request->validated();
+        $credenciales = $request->only('username', 'clave');
+
+        $result = $this->usuarioService->login($credenciales);
+        return response()->json($result, 200);
     }
 }

@@ -18,6 +18,7 @@ return new class extends Migration
             $table->text('carta_presentación');
             $table->string('cv');
             $table->enum('disponibilidad', array_column(DisponibilidadEnum::cases(), 'value'));
+            $table->boolean('disponibilidad_mudanza')->default(false);
             $table->foreignId('usuario_id')->constrained('usuarios');
         });
     }

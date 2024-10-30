@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('apellido',50);
             $table->string('dni',20)->unique();
             $table->string('correo')->unique();
-            $table->date('fecha_nacimiento');
+            $table->date('fecha_nacimiento')->nullable(false);
             $table->string('clave');
             $table->enum('estado',allowed:  array_column(EstadoUsuarioEnum::cases(), 'value'))->default(EstadoUsuarioEnum::PRIVADO->value);
             $table->foreignId("rol_id")->constrained('roles');

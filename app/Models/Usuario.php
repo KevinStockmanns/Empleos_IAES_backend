@@ -4,8 +4,9 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Tymon\JWTAuth\Contracts\JWTSubject;
 
-class Usuario extends Model
+class Usuario extends Model implements JWTSubject
 {
     use HasFactory;
 
@@ -14,7 +15,6 @@ class Usuario extends Model
 
     protected $fillable = ['nombre', 'apellido', 'fecha_nacimiento', 'dni', 'correo', 'clave','estado'];
 
-    // Definir la relación: un usuario tiene un rol
     public function rol()
     {
         return $this->belongsTo(Rol::class);
@@ -34,5 +34,16 @@ class Usuario extends Model
 
     public function direccion(){
         return $this->hasOne(Direccion::class);
+    }
+
+
+    public function getJWTIdentifier()
+    {
+        return $this->getKey();
+    }
+
+    public function getJWTCustomClaims()
+    {
+        return []; 
     }
 }
