@@ -15,13 +15,13 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
-});
+// Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
+//     return $request->user();
+// });
 
 
-Route::prefix('/v1/usuarios')->group(function(){
-    Route::get("/{id}", [UsuarioController::class, 'obtenerUsuario']);
+Route::prefix('/v1/usuarios')->group(function() {
     Route::post("/login", [UsuarioController::class, 'loginUsuario']);
     Route::post("/", [UsuarioController::class, 'registrarUsuario']);
+    Route::get("/{id}", [UsuarioController::class, 'obtenerUsuario']);
 });

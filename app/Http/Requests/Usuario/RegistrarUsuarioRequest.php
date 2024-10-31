@@ -1,8 +1,10 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\Usuario;
 
 use App\Enums\EstadoUsuarioEnum;
+use App\Enums\RolEnum;
+use App\Http\Requests\UbicacionRequest;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
@@ -44,6 +46,9 @@ class RegistrarUsuarioRequest extends FormRequest
                     'required', 
                     Rule::in(array_column(EstadoUsuarioEnum::cases(), 'value'))
                 ],
+                'rol'=>[
+                    Rule::in(array_column(RolEnum::cases(),'value'))
+                ]
                 
             ],
             $ubicacion->rules()
@@ -77,6 +82,7 @@ class RegistrarUsuarioRequest extends FormRequest
                 'dni.unique'=>'El DNI ya está en uso',
                 'estado.required'=>'El estado es requerido',
                 'estado.in'=>'El estado debe ser uno de los siguientes valores: ' . implode(', ', array_column(EstadoUsuarioEnum::cases(), 'value')),
+                'rol.in'=>'El rol debe ser uno de los siguientes valores: ' . implode(', ', array_column(RolEnum::cases(), 'value')),
             ],
             $ubicacionRequest->rules(),
         );

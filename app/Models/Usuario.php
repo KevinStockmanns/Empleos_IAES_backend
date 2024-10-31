@@ -4,14 +4,16 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Tymon\JWTAuth\Contracts\JWTSubject;
 
-class Usuario extends Model implements JWTSubject
+class Usuario extends Model
 {
     use HasFactory;
 
     protected $table = 'usuarios';
     public $timestamps = false;
+
+    protected $password = 'clave';
+
 
     protected $fillable = ['nombre', 'apellido', 'fecha_nacimiento', 'dni', 'correo', 'clave','estado'];
 
@@ -32,18 +34,8 @@ class Usuario extends Model implements JWTSubject
         return $this->hasMany(ExperienciaLaboral::class);
     }
 
-    public function direccion(){
-        return $this->hasOne(Direccion::class);
-    }
-
-
-    public function getJWTIdentifier()
-    {
-        return $this->getKey();
-    }
-
-    public function getJWTCustomClaims()
-    {
-        return []; 
+    
+    public function direcciones() {
+        return $this->belongsToMany(Direccion::class, 'usuario_direccion');
     }
 }

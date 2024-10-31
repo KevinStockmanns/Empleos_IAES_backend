@@ -9,6 +9,9 @@ class Provincia extends Model
 {
     use HasFactory;
 
+    protected $table = "provincias";
+    protected $timestamps = false;
+
     public function pais(){
         return $this->belongsTo(Pais::class);
     }

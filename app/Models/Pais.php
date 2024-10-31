@@ -10,6 +10,7 @@ class Pais extends Model
     use HasFactory;
 
     protected $table = 'paises';
+    protected $timestamps = false;
 
     public function provincias(){
         return $this->hasMany(Provincia::class);

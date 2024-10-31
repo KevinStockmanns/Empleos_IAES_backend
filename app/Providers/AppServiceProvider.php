@@ -13,11 +13,11 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        $this->app->singleton(EncryptService::class, function($app){
-            return new EncryptService();
-        });
+        // $this->app->singleton(UsuarioService::class, function ($app) {
+        //     return new UsuarioService($app->make(EncryptService::class));
+        // });
         $this->app->singleton(UsuarioService::class, function ($app) {
-            return new UsuarioService($app->make(EncryptService::class));
+            return new UsuarioService();
         });
     }
 

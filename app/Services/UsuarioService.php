@@ -5,31 +5,28 @@ namespace App\Services;
 
 use App\Enums\RolEnum;
 use App\Exceptions\CustomException;
-use App\Http\Requests\RegistrarUsuarioRequest;
+use App\Http\Requests\Usuario\RegistrarUsuarioRequest;
 use App\Models\Rol;
 use App\Models\Usuario;
 use Carbon\Carbon;
+use Hash;
 use Tymon\JWTAuth\Exceptions\JWTException;
 use Tymon\JWTAuth\Facades\JWTAuth;
 
-class UsuarioService
-{
-    private $encryptService;
-    public function __construct(EncryptService $encryptService)
-    {
-        $this->encryptService = $encryptService;
-    }
+class UsuarioService{
     public function registrar(RegistrarUsuarioRequest $request)
     {
         $data = $request->validated();
         $rol = Rol::firstOrCreate([
-            'nombre' => RolEnum::ALUMNO->value,
+            'nombre' => isset($data['rol'])
+                ? $data['rol']
+                : RolEnum::ALUMNO->value,
         ]);
         $usuario = new Usuario([
             'nombre' => $data['nombre'],
             'apellido' => $data['apellido'],
             'correo' => $data['correo'],
-            'clave' => $this->encryptService->encryptPassword($data['clave']),
+            'clave' => $this->encryptPassword($data['clave']),
             'dni' => $data['dni'],
             'estado' => $data['estado'],
             'fecha_nacimiento' => isset($data['fechaNacimiento'])
@@ -47,24 +44,34 @@ class UsuarioService
         return Usuario::find($id);
     }
 
-    public function login($credenciales){
-        $usuario = Usuario::where('correo', $credenciales['username']);
+    public function login($username, $clave){
+        $usuario = Usuario::where('correo', $username)->first();
 
-        if (!$usuario || !$this->encryptService->verifyPassword($credenciales['clave'], $usuario->clave())) {
-            throw new CustomException("Credenciales inválidas", 403);
+        if (!$usuario) {
+            throw new CustomException('Credenciales inválidas', 403);
         }
 
-        try {
-            if (!$token = JWTAuth::attempt($credenciales)) {
-                throw new CustomException('ocurrio un error al inciar sesión', 500);
-            }
-        } catch (JWTException $e) {
-            throw new CustomException('ocurrio un error al inciar sesión', 500);
+        if (!$this->verifyPassword($clave, $usuario->clave)){
+            throw new CustomException('Credenciales inválidas', 403);
         }
 
-        return [
-            'token' => $token,
-            'usuario' => $usuario,
-        ];
+        return $usuario;
     }
+
+    public function completarData($data){
+        if(isset($data['ubicacion'])){
+            
+        }
+    }
+
+
+
+    public function encryptPassword ($password){
+        return Hash::make($password);
+    }
+
+    public function verifyPassword($password, $hash){
+        return Hash::check($password, $hash);
+    }
+
 }
