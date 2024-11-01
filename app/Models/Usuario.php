@@ -38,4 +38,7 @@ class Usuario extends Model
     public function direcciones() {
         return $this->belongsTo(Direccion::class);
     }
+    public function pasantias(){
+        return $this->hasMany(Pasantia::class);
+    }
 }

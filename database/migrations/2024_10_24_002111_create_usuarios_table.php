@@ -23,6 +23,8 @@ return new class extends Migration
             $table->enum('estado',allowed:  array_column(EstadoUsuarioEnum::cases(), 'value'))->default(EstadoUsuarioEnum::PRIVADO->value);
             $table->foreignId("rol_id")->constrained('roles');
             $table->foreignId('direccion_id')->nullable(true)->default(null)->constrained('direcciones');
+            $table->datetime('created_at')->useCurrent();
+            $table->datetime('ultimo_inicio')->nullable()->default(null);
         });
     }
 
