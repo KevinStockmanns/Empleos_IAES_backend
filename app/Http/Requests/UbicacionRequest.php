@@ -21,17 +21,15 @@ class UbicacionRequest extends FormRequest
      */
     public function rules(): array
     {
-        if ($this->has('ubicacion')) {
-            return [
-                'ubicacion.pais' => 'required|string|max:100',
-                'ubicacion.provincia' => 'required|string|max:100',
-                'ubicacion.localidad' => 'required|string|max:100',
-                'ubicacion.direccion' => 'required|string|max:255',
-                'ubicacion.numero' => 'required|numeric',
-            ];
-        }
-
-        return [];
+        return [
+            'ubicacion.pais' => 'required|string|max:100',
+            'ubicacion.provincia' => 'required|string|max:100',
+            'ubicacion.localidad' => 'required|string|max:100',
+            'ubicacion.barrio'=>'required|string|max:255',
+            'ubicacion.direccion' => 'required|string|max:255',
+            'ubicacion.numero' => 'numeric',
+            'ubicacion.piso' => 'numeric',
+        ];
     }
 
     /**
@@ -42,12 +40,28 @@ class UbicacionRequest extends FormRequest
     public function messages()
     {
         return [
-            'ubicacion.pais.required' => 'El país es requerido',
-            'ubicacion.provincia.required' => 'La provincia es requerida',
-            'ubicacion.localidad.required' => 'La localidad es requerida',
-            'ubicacion.direccion.required' => 'La dirección es requerida',
-            'ubicacion.numero.required' => 'El número es requerido',
-            'ubicacion.numero.numeric' => 'Debe ser un número entero',
+            'ubicacion.pais.required' => 'El país es requerido.',
+            'ubicacion.pais.string' => 'El país debe ser una cadena de texto.',
+            'ubicacion.pais.max' => 'El país no puede tener más de 100 caracteres.',
+            
+            'ubicacion.provincia.required' => 'La provincia es requerida.',
+            'ubicacion.provincia.string' => 'La provincia debe ser una cadena de texto.',
+            'ubicacion.provincia.max' => 'La provincia no puede tener más de 100 caracteres.',
+            
+            'ubicacion.localidad.required' => 'La localidad es requerida.',
+            'ubicacion.localidad.string' => 'La localidad debe ser una cadena de texto.',
+            'ubicacion.localidad.max' => 'La localidad no puede tener más de 100 caracteres.',
+            
+            'ubicacion.barrio.required' => 'El barrio es requerido.',
+            'ubicacion.barrio.string' => 'El barrio debe ser una cadena de texto.',
+            'ubicacion.barrio.max' => 'El barrio no puede tener más de 255 caracteres.',
+            
+            'ubicacion.direccion.required' => 'La dirección es requerida.',
+            'ubicacion.direccion.string' => 'La dirección debe ser una cadena de texto.',
+            'ubicacion.direccion.max' => 'La dirección no puede tener más de 255 caracteres.',
+            
+            'ubicacion.numero.numeric' => 'El número debe ser un valor numérico.',
+            'ubicacion.piso.numeric' => 'El piso debe ser un valor numérico.',
         ];
     }
 }

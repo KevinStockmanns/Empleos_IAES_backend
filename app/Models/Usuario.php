@@ -15,7 +15,7 @@ class Usuario extends Model
     protected $password = 'clave';
 
 
-    protected $fillable = ['nombre', 'apellido', 'fecha_nacimiento', 'dni', 'correo', 'clave','estado'];
+    protected $fillable = ['nombre', 'apellido', 'fecha_nacimiento', 'dni', 'correo', 'clave','estado', 'direccion_id'];
 
     public function rol()
     {
@@ -36,6 +36,6 @@ class Usuario extends Model
 
     
     public function direcciones() {
-        return $this->belongsToMany(Direccion::class, 'usuario_direccion');
+        return $this->belongsTo(Direccion::class);
     }
 }

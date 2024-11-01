@@ -14,6 +14,11 @@ use Tymon\JWTAuth\Exceptions\JWTException;
 use Tymon\JWTAuth\Facades\JWTAuth;
 
 class UsuarioService{
+    private $ubicacionService;
+
+    public function __construct(UbicacionService $ubicacionService){
+        $this->ubicacionService = $ubicacionService;
+    }
     public function registrar(RegistrarUsuarioRequest $request)
     {
         $data = $request->validated();
@@ -32,6 +37,7 @@ class UsuarioService{
             'fecha_nacimiento' => isset($data['fechaNacimiento'])
                 ? Carbon::createFromFormat('Y-m-d', $data['fechaNacimiento'])
                 : null,
+            'direccion_id'=>null,
         ]);
         $usuario->rol_id = $rol->id;
 
@@ -62,6 +68,18 @@ class UsuarioService{
         if(isset($data['ubicacion'])){
             
         }
+    }
+
+    public function cargarUbicacion($idUsuario, $data){
+        $direccion = $this->ubicacionService->registrarOrBuscar($data['ubicacion']);
+        $usuario = Usuario::find($idUsuario);
+
+        if(!$usuario){
+            throw new CustomException('no se enontro el usuario con el id ingresado',404);
+        }
+        $usuario->direccion_id = $direccion->id;
+        $usuario->save();
+        return $direccion;
     }
 
 

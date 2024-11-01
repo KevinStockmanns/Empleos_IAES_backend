@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\DTO\Ubicacion\UbicacionRespuestaDTO;
 use App\DTO\Usuario\UsuarioRespuestaDTO;
 use App\Exceptions\CustomException;
+use App\Http\Requests\UbicacionRequest;
 use App\Http\Requests\Usuario\RegistrarUsuarioRequest;
 use App\Http\Requests\Usuario\UsuarioCompletarRequest;
 use App\Http\Requests\Usuario\UsuarioLoginRequest;
@@ -48,5 +50,13 @@ class UsuarioController extends Controller
         $data = $r->validated();
 
         
+    }
+
+    public function postUbicacion(UbicacionRequest $r){
+        $id = $r->route('id');
+        $data =$r->validated();
+        $direccion = $this->usuarioService->cargarUbicacion($id, $data);
+
+        return response()->json(new UbicacionRespuestaDTO($direccion));
     }
 }

@@ -9,7 +9,9 @@ class Localidad extends Model
 {
     use HasFactory;
     protected $table = 'localidades';
-    protected $timestamps = false;
+    public $timestamps = false;
+    public $fillable = ["nombre", "provincia_id", "codigo_postal"];
+
     
     public function provincia(){
         return $this->belongsTo(Provincia::class);
@@ -17,5 +19,14 @@ class Localidad extends Model
 
     public function localidades(){
         return $this->hasMany(Localidad::class);
+    }
+
+
+    public static function createOrFirst($data){
+        $loc = self::where('nombre', $data['nombre'])->first();
+        if($loc){
+            return $loc;
+        }
+        return self::create($data);
     }
 }

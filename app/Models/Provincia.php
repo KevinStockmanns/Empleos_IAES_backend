@@ -10,12 +10,24 @@ class Provincia extends Model
     use HasFactory;
 
     protected $table = "provincias";
-    protected $timestamps = false;
+    public $timestamps = false;
+    public $fillable = ["nombre", "pais_id"];
+
 
     public function pais(){
         return $this->belongsTo(Pais::class);
     }
     public function localidades(){
         return $this->hasMany(Localidad::class);
+    }
+
+
+
+    public static function createOrFirst(array $data){
+        $provincia = self::where('nombre', $data['nombre'])->first();
+        if ($provincia){
+            return $provincia;
+        }
+        return self::create($data);
     }
 }

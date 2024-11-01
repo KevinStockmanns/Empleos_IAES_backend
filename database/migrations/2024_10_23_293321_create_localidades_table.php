@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('localidades', function (Blueprint $table) {
             $table->id();
             $table->string('nombre',150);
-            $table->string('codigo_postal',30);
+            $table->string('codigo_postal',30)->nullable()->default(null);
             $table->foreignId('provincia_id')->constrained('provincias');
         });
     }

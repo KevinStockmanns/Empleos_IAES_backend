@@ -17,13 +17,16 @@ class UbicacionService{
         ]);
         $localidad = Localidad::createOrFirst([
             "nombre"=> $data['localidad'],
+            'codigo_postal' => $data['codigo_postal'] ?? null, 
             "provincia_id"=>$provincia->id
+            
         ]);
         $direccion = Direccion::createOrFirst([
-            'direccion'=>$data['direccion'],
-            'numero'=> isset($data['numero']) ? $data['numero'] : "0",
+            'barrio'=> $data['barrio'],
+            'calle'=>$data['direccion'],
+            'numero'=> isset($data['numero']) ? $data['numero'] : null,
             'piso'=> isset($data['piso']) ? $data['piso'] : null,
-            'localidad_id'=> $localidad->id
+            'localidad_id'=> $localidad->id,
         ]);
 
         return $direccion;
