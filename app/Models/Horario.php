@@ -16,6 +16,6 @@ class Horario extends Model
 
 
     public function empresas(){
-        return $this->hasMany(Empresa::class);
+        return $this->belongsToMany(Empresa::class,"empresa_horarios", "horario_id", "empresa_id");
     }
 }

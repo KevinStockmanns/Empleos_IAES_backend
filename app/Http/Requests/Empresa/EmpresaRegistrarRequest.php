@@ -33,7 +33,7 @@ class EmpresaRegistrarRequest extends FormRequest
             $ubicacion = new UbicacionRequest();
             $rules = array_merge($rules, $ubicacion->rules());
         }
-        if ($this->has('horario')) {
+        if ($this->has('horarios')) {
             $horario = new HorarioRequest();
             $rules = array_merge(
                 $rules,

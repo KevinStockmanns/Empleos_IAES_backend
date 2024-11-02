@@ -18,7 +18,6 @@ return new class extends Migration
             $table->string('referente',50)->nullable();
             $table->foreignId('usuario_id')->nullable()->constrained('usuarios');
             $table->foreignId('direccion_id')->nullable()->constrained('direcciones');
-            $table->foreignId('horario_id')->nullable()->constrained('horarios');
         });
     }
 

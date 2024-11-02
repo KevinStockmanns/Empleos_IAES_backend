@@ -14,8 +14,8 @@ class Empresa extends Model
     protected $guarded = ['id'];
 
 
-    public function horario(){
-        return $this->belongsTo(Horario::class);
+    public function horarios(){
+        return $this->belongsToMany(Horario::class, "empresa_horarios", "empresa_id", "horario_id");
     }
 
 

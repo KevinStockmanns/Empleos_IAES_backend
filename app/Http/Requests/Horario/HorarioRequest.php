@@ -22,21 +22,25 @@ class HorarioRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'horario.desde'=>'required|date_format:H:i',
-            'horario.hasta'=>'required|date_format:H:i',
-            'horario.dias'=>'regex:/^([0-6](,[0-6])*)?$/'
+            'horarios'=>'required|array|min:1',
+            'horarios.*.desde'=>'required|date_format:H:i',
+            'horarios.*.hasta'=>'required|date_format:H:i',
+            'horarios.*.dias'=>'regex:/^([0-6](,[0-6])*)?$/'
         ];
     }
 
     public function messages(){
         return [
-            'horario.desde.required' => 'la hora de inicio es requerida',
-            'horario.desde.date_format' => 'la hora de inicio debe ser en el formato HH:mm',
+            'horarios.required'=>'los horarios son requeridos',
+            'horarios.array'=>'horarios debe ser un arreglo',
+            'horarios.min'=>'los horarios debe tener al menos :min elemento',
+            'horarios.*.desde.required' => 'la hora de inicio es requerida',
+            'horarios.*.desde.date_format' => 'la hora de inicio debe ser en el formato HH:mm',
 
-            'horario.hasta.required' => 'la hora de finalizado es requerida',
-            'horario.hasta.date_format' => 'la hora de finalizado debe ser en el formato HH:mm',
+            'horarios.*.hasta.required' => 'la hora de finalizado es requerida',
+            'horarios.*.hasta.date_format' => 'la hora de finalizado debe ser en el formato HH:mm',
 
-            'horario.dias.regex' => 'los días deben ser ingresados como números (0-6) (Domingo-Sábado) separados por ","',
+            'horarios.*.dias.regex' => 'los días deben ser ingresados como números (0-6) (Domingo-Sábado) separados por ","',
         ];
     }
 }

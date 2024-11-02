@@ -10,7 +10,7 @@ class EmpresaRespuestaDTO{
     public $cuil_cuit;
     public $referente;
     public $ubicacion;
-    public $horario;
+    public $horarios;
     public $usuario_id;
 
     public function __construct(Empresa $empresa){
@@ -19,6 +19,13 @@ class EmpresaRespuestaDTO{
         $this->referente = $empresa->referente;
         $this->ubicacion = new UbicacionRespuestaDTO($empresa->direccion);
         $this->usuario_id = $empresa->usuario_id;
-        $this->horario=new HorarioRespuestaDTO($empresa->horario);
+        
+        
+        $horarios = $empresa->horarios;
+        $this->horarios = $horarios 
+            ? $horarios->map(function($horario) {
+                return new HorarioRespuestaDTO($horario);
+            })->toArray() 
+            : [];
     }
 }
