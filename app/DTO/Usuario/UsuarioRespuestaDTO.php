@@ -9,8 +9,9 @@ class UsuarioRespuestaDTO
     public $dni;
     public $fechaNacimiento;
     public $estado;
+    public $token;
 
-    public function __construct($usuario)
+    public function __construct($usuario, $token = null)
     {
         $this->id = $usuario->id;
         $this->correo = $usuario->correo;
@@ -19,5 +20,6 @@ class UsuarioRespuestaDTO
         $this->dni = $usuario->dni;
         $this->fechaNacimiento = $usuario->fecha_nacimiento;
         $this->estado = $usuario->estado;
+        $this->token = $token;
     }
 }

@@ -64,4 +64,13 @@ class UbicacionRequest extends FormRequest
             'ubicacion.piso.numeric' => 'El piso debe ser un valor numérico.',
         ];
     }
+
+    protected function prepareForValidation()
+    {
+        $this->merge([
+            'ubicacion' => array_map(function ($value) {
+                return is_string($value) ? trim($value) : $value;
+            }, $this->input('ubicacion', [])),
+        ]);
+    }
 }

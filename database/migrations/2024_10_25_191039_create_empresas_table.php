@@ -14,8 +14,8 @@ return new class extends Migration
         Schema::create('empresas', function (Blueprint $table) {
             $table->id();
             $table->string('nombre',100)->nullable(false);
-            $table->string('cuil_cuit')->nullable();
-            $table->string('referente')->nullable();
+            $table->string('cuil_cuit',20)->nullable();
+            $table->string('referente',50)->nullable();
             $table->foreignId('usuario_id')->nullable()->constrained('usuarios');
             $table->foreignId('direccion_id')->nullable()->constrained('direcciones');
             $table->foreignId('horario_id')->constrained('horarios');

@@ -41,9 +41,9 @@ class UsuarioController extends Controller
     public function loginUsuario(UsuarioLoginRequest $r){
         $data = $r->validated();
 
-        $usuario = $this->usuarioService->login($data['username'], $data['clave']);
+        $loginData = $this->usuarioService->login($data['username'], $data['clave']);
 
-        return response()->json(new UsuarioRespuestaDTO($usuario));
+        return response()->json(new UsuarioRespuestaDTO($loginData['usuario'], $loginData['token']));
     }
 
     public function completarDatos(UsuarioCompletarRequest $r){

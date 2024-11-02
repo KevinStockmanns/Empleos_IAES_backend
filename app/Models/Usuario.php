@@ -4,8 +4,9 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Tymon\JWTAuth\Contracts\JWTSubject;
 
-class Usuario extends Model
+class Usuario extends Model implements JWTSubject
 {
     use HasFactory;
 
@@ -40,5 +41,27 @@ class Usuario extends Model
     }
     public function pasantias(){
         return $this->hasMany(Pasantia::class);
+    }
+
+
+
+    /**
+     * Obtiene el identificador que se almacenará en el token JWT.
+     *
+     * @return mixed
+     */
+    public function getJWTIdentifier()
+    {
+        return $this->getKey(); // Normalmente el ID del usuario
+    }
+
+    /**
+     * Devuelve cualquier reclamo personalizado que quieras añadir al token JWT.
+     *
+     * @return array
+     */
+    public function getJWTCustomClaims()
+    {
+        return [];
     }
 }

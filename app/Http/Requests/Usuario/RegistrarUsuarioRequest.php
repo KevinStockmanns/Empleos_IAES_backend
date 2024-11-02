@@ -87,7 +87,7 @@ class RegistrarUsuarioRequest extends FormRequest
                 'estado.in' => 'El estado debe ser uno de los siguientes valores: ' . implode(', ', array_column(EstadoUsuarioEnum::cases(), 'value')),
                 'rol.in' => 'El rol debe ser uno de los siguientes valores: ' . implode(', ', array_column(RolEnum::cases(), 'value')),
             ],
-            $ubicacionRequest->rules(),
+            $ubicacionRequest->messages(),
         );
     }
 }
