@@ -20,6 +20,9 @@ class Direccion extends Model
     public function usuarios(){
         return $this->hasMany(Usuario::class);
     }
+    public function empresas(){
+        return $this->hasMany(Empresa::class);
+    }
 
 
 

@@ -13,9 +13,9 @@ return new class extends Migration
     {
         Schema::create('horarios', function (Blueprint $table) {
             $table->id();
-            $table->string('desde',10)->nullable(false);
-            $table->string('hasta',10)->nullable();
-            $table->string('dias')->nullable(false);
+            $table->time('desde')->nullable(false);
+            $table->time('hasta')->nullable(false);
+            $table->string('dias',20)->nullable();
         });
     }
 

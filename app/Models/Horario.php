@@ -11,6 +11,8 @@ class Horario extends Model
     
     public $table = 'horarios';
     public $timestamps = false;
+    public $guarded = ['id'];
+
 
 
     public function empresas(){

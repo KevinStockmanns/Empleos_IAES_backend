@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\EmpresaController;
 use App\Http\Controllers\UsuarioController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -30,4 +31,11 @@ Route::prefix('/v1/usuarios')->group(function() {
         Route::get("/{id}", [UsuarioController::class, 'obtenerUsuario']);
         Route::post('/{id}/ubicacion', [UsuarioController::class, 'postUbicacion']);
     });
+});
+
+Route::prefix('/v1/empresas')->group(function(){
+    
+
+    Route::post('/', [EmpresaController::class, 'postEmpresa']);
+    Route::post('/{id}/ubicacion', [EmpresaController::class, 'cambiarUbicacion']);
 });
