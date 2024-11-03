@@ -10,6 +10,7 @@ class UsuarioRespuestaDTO
     public $fechaNacimiento;
     public $estado;
     public $token;
+    public $rol;
 
     public function __construct($usuario, $token = null)
     {
@@ -20,6 +21,7 @@ class UsuarioRespuestaDTO
         $this->dni = $usuario->dni;
         $this->fechaNacimiento = $usuario->fecha_nacimiento;
         $this->estado = $usuario->estado;
+        $this->rol = $usuario->rol->nombre;
         $this->token = $token;
     }
 }
