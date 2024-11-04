@@ -12,7 +12,7 @@ class Authenticate extends Middleware
      */
     protected function redirectTo(Request $request): ?string
     {
-        return "seguridad requerida";
+        return "login";
     }
 
     protected function unauthenticated($request, array $guards)

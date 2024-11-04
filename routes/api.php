@@ -20,6 +20,16 @@ use Illuminate\Support\Facades\Route;
 //     return $request->user();
 // });
 
+Route::group([
+
+    'middleware' => 'api',
+    'prefix' => 'auth'
+
+], function ($router) {
+
+    Route::post('prueba/{id}', 'UsuarioController@obtenerUsuario');
+
+});
 
 Route::prefix('/v1/usuarios')->group(function() {
     Route::post("/login", [UsuarioController::class, 'loginUsuario']);
