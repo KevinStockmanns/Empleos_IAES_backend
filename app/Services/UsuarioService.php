@@ -63,11 +63,11 @@ class UsuarioService
         }
 
         $claims = [
-            'rol' => $usuario->rol->nombre,             
-            'username' => $usuario->correo, 
-            'exp' => now()->addHours(4)->timestamp 
+            'rol' => $usuario->rol->nombre,
+            'username' => $usuario->correo,
+            'exp' => now()->addHours(4)->timestamp
         ];
-    
+
         $token = JWTAuth::claims($claims)->fromUser($usuario);
 
         return [
@@ -94,6 +94,34 @@ class UsuarioService
         $usuario->direccion_id = $direccion->id;
         $usuario->save();
         return $direccion;
+    }
+    public function actualizarUsuario($idUsuario, $data)
+    {
+        $usuario = Usuario::find($idUsuario);
+        if (isset($data['nombre'])) {
+            $usuario->nombre = $data['nombre'];
+        }
+        if (isset($data['apellido'])) {
+            $usuario->apellido = $data['apellido'];
+        }
+        if (isset($data['correo'])) {
+            $usuario->correo = $data['correo'];
+        }
+        if (isset($data['fechaNacimiento'])) {
+            $usuario->fecha_nacimiento = Carbon::createFromFormat('Y-m-d', $data['fechaNacimiento']);
+        }
+        if (isset($data['dni'])) {
+            $usuario->dni = $data['dni'];
+        }
+        if (isset($data['rol'])) {
+            $rol = Rol::firstOrCreate([
+                'nombre' => $data['rol']
+            ]);
+            $usuario->rol_id = $rol->id;
+        }
+
+        $usuario->save();
+        return $usuario;
     }
 
 

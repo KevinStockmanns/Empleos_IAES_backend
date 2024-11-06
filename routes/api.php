@@ -2,7 +2,6 @@
 
 use App\Http\Controllers\EmpresaController;
 use App\Http\Controllers\UsuarioController;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -20,25 +19,13 @@ use Illuminate\Support\Facades\Route;
 //     return $request->user();
 // });
 
-Route::group([
-
-    'middleware' => 'api',
-    'prefix' => 'auth'
-
-], function ($router) {
-
-    Route::post('prueba/{id}', 'UsuarioController@obtenerUsuario');
-
-});
-
 Route::prefix('/v1/usuarios')->group(function() {
     Route::post("/login", [UsuarioController::class, 'loginUsuario']);
     Route::post("/", [UsuarioController::class, 'registrarUsuario']);
-    // Route::get("/{id}", [UsuarioController::class, 'obtenerUsuario']);
-    // Route::post('/{id}/ubicacion', [UsuarioController::class, 'postUbicacion']);
 
     Route::middleware('auth:api')->group(function () {
         Route::get("/{id}", [UsuarioController::class, 'obtenerUsuario']);
+        Route::put("/{id}", [UsuarioController::class, 'putUsuario']);
         Route::post('/{id}/ubicacion', [UsuarioController::class, 'postUbicacion']);
     });
 });

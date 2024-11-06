@@ -13,7 +13,7 @@ class Usuario extends Model implements JWTSubject
     protected $table = 'usuarios';
     public $timestamps = false;
 
-    protected $password = 'clave';
+    // protected $password = 'clave';
 
 
     protected $fillable = ['nombre', 'apellido', 'fecha_nacimiento', 'dni', 'correo', 'clave','estado', 'direccion_id'];

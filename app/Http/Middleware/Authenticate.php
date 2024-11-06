@@ -12,11 +12,10 @@ class Authenticate extends Middleware
      */
     protected function redirectTo(Request $request): ?string
     {
-        return "login";
+        return "/login";
     }
 
-    protected function unauthenticated($request, array $guards)
-{
+    protected function unauthenticated($request, array $guards){
     return response()->json(['error' => 'Seguridad requerida'], 401);
 }
 

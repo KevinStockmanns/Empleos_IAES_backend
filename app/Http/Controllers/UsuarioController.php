@@ -7,15 +7,18 @@ use App\DTO\Usuario\UsuarioRespuestaDTO;
 use App\Exceptions\CustomException;
 use App\Http\Requests\UbicacionRequest;
 use App\Http\Requests\Usuario\RegistrarUsuarioRequest;
+use App\Http\Requests\Usuario\UsuarioActualizarRequest;
 use App\Http\Requests\Usuario\UsuarioCompletarRequest;
 use App\Http\Requests\Usuario\UsuarioLoginRequest;
 use App\Services\UsuarioService;
+use Auth;
 
 class UsuarioController extends Controller
 {
     protected $usuarioService;
     public function __construct(UsuarioService $usuarioService)
     {
+        $this->middleware('auth:api');
         $this->usuarioService = $usuarioService;
     }
 
@@ -26,8 +29,19 @@ class UsuarioController extends Controller
         return response()->json(new UsuarioRespuestaDTO($usuario));
     }
 
+    public function putUsuario(UsuarioActualizarRequest $req){
+        $data = $req->validated();
+        $id = $req->route('id');
+        $usuario = $this->usuarioService->actualizarUsuario($id, $data);
+
+        return response()->json(new UsuarioRespuestaDTO($usuario));
+    }
+
     public function obtenerUsuario($id)
     {
+        // if(!auth()->check()){
+        //     throw new CustomException('token requerido',403);
+        // }
         $usuario = $this->usuarioService->obtenerById($id);
 
         if (!$usuario) {
@@ -59,4 +73,6 @@ class UsuarioController extends Controller
 
         return response()->json(new UbicacionRespuestaDTO($direccion));
     }
+
+    
 }
