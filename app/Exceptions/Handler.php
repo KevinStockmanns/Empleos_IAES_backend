@@ -56,7 +56,7 @@ class Handler extends ExceptionHandler
     //         return response()->json([
     //             'message'=>'errores de validación',
     //             'errors'=> $exception->errors(),
-    //         ], 404);
+    //         ], 400);
     //     }
 
     //     if($exception instanceof CustomException){

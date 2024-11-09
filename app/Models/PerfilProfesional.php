@@ -9,6 +9,10 @@ class PerfilProfesional extends Model
 {
     use HasFactory;
 
+    public $table = 'perfil_profesional';
+    public $timestamps = false;
+    public $guarded = ['id'];
+
     public function usuario(){
         $this->belongsTo(Usuario::class);
     }

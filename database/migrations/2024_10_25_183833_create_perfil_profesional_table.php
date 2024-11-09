@@ -15,14 +15,13 @@ return new class extends Migration
         Schema::create('perfil_profesional', function (Blueprint $table) {
             $table->id();
             $table->string('cargo');
-            $table->text('carta_presentación');
-            $table->string('cv');
+            $table->text('carta_presentacion')->nullable();
+            $table->string('cv')->nullable();
             $table->enum('disponibilidad', array_column(DisponibilidadEnum::cases(), 'value'));
             $table->boolean('disponibilidad_mudanza')->default(false);
             $table->foreignId('usuario_id')->constrained('usuarios');
         });
     }
-
     /**
      * Reverse the migrations.
      */

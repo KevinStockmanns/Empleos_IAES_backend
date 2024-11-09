@@ -6,6 +6,7 @@ namespace App\Services;
 use App\Enums\RolEnum;
 use App\Exceptions\CustomException;
 use App\Http\Requests\Usuario\RegistrarUsuarioRequest;
+use App\Models\PerfilProfesional;
 use App\Models\Rol;
 use App\Models\Usuario;
 use Carbon\Carbon;
@@ -122,6 +123,38 @@ class UsuarioService
 
         $usuario->save();
         return $usuario;
+    }
+
+    public function cargarPerfilProfesional($idUsuario, $data){
+        $usuario = Usuario::find($idUsuario);
+        if (!$usuario){
+            throw new CustomException('no se econtro el ususario en la base de datos',404);
+        }
+        $perfilP = $usuario->perfilProfesional;
+        if($perfilP){
+            if(isset($data['cargo'])){
+                $perfilP->cargo = $data['cargo'];
+            }
+            if(isset($data['cartaPresentacion'])){
+                $perfilP->carta_presentacion = $data['cartaPresentacion'];
+            }
+            if(isset($data['disponibilidad'])){
+                $perfilP->disponibilidad = $data['disponibilidad'];
+            }
+            if(isset($data['disponibilidadMudanza'])){
+                $perfilP->disponibilidad_mudanza = $data['disponibilidadMudanza'];
+            }
+        }else{
+            $perfilP = new PerfilProfesional([
+                'cargo' => $data['cargo'],
+                'carta_presentacion'=> $data['cartaPresentacion'] ?? null,
+                'disponibilidad'=>$data['disponibilidad'],
+                'disponibilidad_mudanza'=> $data['disponibilidadMudanza']
+            ]);
+            $perfilP->usuario_id = $usuario->id;
+        }
+        $perfilP->save();
+        return $perfilP;
     }
 
 

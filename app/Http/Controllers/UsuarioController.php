@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\DTO\PerfilProfesional\PerfilProfesionalRespuestaDTO;
 use App\DTO\Ubicacion\UbicacionRespuestaDTO;
 use App\DTO\Usuario\UsuarioRespuestaDTO;
 use App\Exceptions\CustomException;
@@ -10,6 +11,7 @@ use App\Http\Requests\Usuario\RegistrarUsuarioRequest;
 use App\Http\Requests\Usuario\UsuarioActualizarRequest;
 use App\Http\Requests\Usuario\UsuarioCompletarRequest;
 use App\Http\Requests\Usuario\UsuarioLoginRequest;
+use App\Http\Requests\UsuarioPerfilProfesionalRequest;
 use App\Services\UsuarioService;
 use Auth;
 
@@ -18,7 +20,6 @@ class UsuarioController extends Controller
     protected $usuarioService;
     public function __construct(UsuarioService $usuarioService)
     {
-        $this->middleware('auth:api');
         $this->usuarioService = $usuarioService;
     }
 
@@ -72,6 +73,14 @@ class UsuarioController extends Controller
         $direccion = $this->usuarioService->cargarUbicacion($id, $data);
 
         return response()->json(new UbicacionRespuestaDTO($direccion));
+    }
+
+    public function postPerfilProfesional(UsuarioPerfilProfesionalRequest $req){
+        $data = $req->validated();
+        $id = $req->route('id');
+        $perfil = $this->usuarioService->cargarPerfilProfesional($id, $data['perfilProfesional']);
+
+        return response()->json(new PerfilProfesionalRespuestaDTO($perfil));
     }
 
     
