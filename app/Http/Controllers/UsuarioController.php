@@ -2,18 +2,21 @@
 
 namespace App\Http\Controllers;
 
+use App\DTO\PaginacionDTO;
 use App\DTO\PerfilProfesional\PerfilProfesionalRespuestaDTO;
 use App\DTO\Ubicacion\UbicacionRespuestaDTO;
 use App\DTO\Usuario\UsuarioRespuestaDTO;
+use App\Enums\RolEnum;
 use App\Exceptions\CustomException;
 use App\Http\Requests\UbicacionRequest;
 use App\Http\Requests\Usuario\RegistrarUsuarioRequest;
 use App\Http\Requests\Usuario\UsuarioActualizarRequest;
 use App\Http\Requests\Usuario\UsuarioCompletarRequest;
 use App\Http\Requests\Usuario\UsuarioLoginRequest;
-use App\Http\Requests\UsuarioPerfilProfesionalRequest;
+use App\Http\Requests\Usuario\UsuarioPerfilProfesionalRequest;
 use App\Services\UsuarioService;
 use Auth;
+use Illuminate\Http\Request;
 
 class UsuarioController extends Controller
 {
@@ -30,7 +33,8 @@ class UsuarioController extends Controller
         return response()->json(new UsuarioRespuestaDTO($usuario));
     }
 
-    public function putUsuario(UsuarioActualizarRequest $req){
+    public function putUsuario(UsuarioActualizarRequest $req)
+    {
         $data = $req->validated();
         $id = $req->route('id');
         $usuario = $this->usuarioService->actualizarUsuario($id, $data);
@@ -53,7 +57,48 @@ class UsuarioController extends Controller
     }
 
 
-    public function loginUsuario(UsuarioLoginRequest $r){
+    public function listarUsuarios(Request $req)
+    {
+        $page = $req->get('page', 1);
+        $size = $req->get('size', 15);
+        $rol = $req->get('rol', RolEnum::ALUMNO->value);
+
+        if (!in_array($rol, array_map(fn($role) => $role->value, RolEnum::cases()))) {
+            $validRoles = implode(', ', array_map(fn($role) => $role->value, RolEnum::cases()));
+            throw new CustomException('El rol enviado no es válido. Los roles válidos son: ' . $validRoles, 400);
+        }
+
+        if (!is_numeric($page) || !is_numeric($size)) {
+            throw new CustomException('Los parametros deben ser númericos', 400);
+        }
+        $size = (int) $size;
+        if ($size < 5 || $size > 15) {
+            throw new CustomException('El parametro "size" debe ser entre 5 y 15', 400);
+        }
+        $page = (int) $page;
+        if ($page <= 0) {
+            throw new CustomException('el parametro "page" debe ser mayor a 0', 400);
+        }
+
+        $usuarios = $this->usuarioService->listarUsuarios($size, $page, $rol);
+
+        $usuariosDTO = [];
+        foreach ($usuarios->items() as $usuario) {
+            $usuariosDTO[] = new UsuarioRespuestaDTO($usuario);
+        }
+
+        return response()->json(new PaginacionDTO(
+            $usuariosDTO,
+            $size,
+            $page,
+            $usuarios->lastPage(),
+            $usuarios->total()
+        ));
+    }
+
+
+    public function loginUsuario(UsuarioLoginRequest $r)
+    {
         $data = $r->validated();
 
         $loginData = $this->usuarioService->login($data['username'], $data['clave']);
@@ -61,21 +106,24 @@ class UsuarioController extends Controller
         return response()->json(new UsuarioRespuestaDTO($loginData['usuario'], $loginData['token']));
     }
 
-    public function completarDatos(UsuarioCompletarRequest $r){
+    public function completarDatos(UsuarioCompletarRequest $r)
+    {
         $data = $r->validated();
 
-        
+
     }
 
-    public function postUbicacion(UbicacionRequest $r){
+    public function postUbicacion(UbicacionRequest $r)
+    {
         $id = $r->route('id');
-        $data =$r->validated();
+        $data = $r->validated();
         $direccion = $this->usuarioService->cargarUbicacion($id, $data);
 
         return response()->json(new UbicacionRespuestaDTO($direccion));
     }
 
-    public function postPerfilProfesional(UsuarioPerfilProfesionalRequest $req){
+    public function postPerfilProfesional(UsuarioPerfilProfesionalRequest $req)
+    {
         $data = $req->validated();
         $id = $req->route('id');
         $perfil = $this->usuarioService->cargarPerfilProfesional($id, $data['perfilProfesional']);
@@ -83,5 +131,5 @@ class UsuarioController extends Controller
         return response()->json(new PerfilProfesionalRespuestaDTO($perfil));
     }
 
-    
+
 }

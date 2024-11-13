@@ -13,7 +13,6 @@ return new class extends Migration
     {
         Schema::create('contactos', function (Blueprint $table) {
             $table->id();
-            $table->string('correo')->unique(true);
             $table->string('numero_telefono');
             $table->string('telefono_fijo');
             $table->string('linkedin',50);

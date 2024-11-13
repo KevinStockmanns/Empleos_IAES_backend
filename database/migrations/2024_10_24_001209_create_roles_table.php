@@ -14,7 +14,7 @@ return new class extends Migration
     {
         Schema::create('roles', function (Blueprint $table) {
             $table->id();
-            $table->enum('nombre',array_column(RolEnum::cases(), 'value'));
+            $table->string('nombre',40);
         });
     }
 

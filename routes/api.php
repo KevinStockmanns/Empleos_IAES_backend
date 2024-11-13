@@ -25,6 +25,7 @@ Route::prefix('/v1/usuarios')->group(function() {
 
     Route::middleware('auth:api')->group(function () {
         Route::get("/{id}", [UsuarioController::class, 'obtenerUsuario']);
+        Route::get("/", [UsuarioController::class, 'listarUsuarios']);
         Route::put("/{id}", [UsuarioController::class, 'putUsuario']);
         Route::post('/{id}/ubicacion', [UsuarioController::class, 'postUbicacion']);
         Route::post("/{id}/perfil_profesional", [UsuarioController::class, 'postPerfilProfesional']);

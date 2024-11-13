@@ -157,6 +157,13 @@ class UsuarioService
         return $perfilP;
     }
 
+    public function listarUsuarios($size, $page, $rol){
+        $rolId = Rol::where('nombre', $rol)->first()->id;
+
+        return Usuario::where('rol_id', $rolId)
+            ->paginate($size, ['*'], 'page', $page);
+    }
+
 
 
     public function encryptPassword($password)

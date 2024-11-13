@@ -15,7 +15,6 @@ return new class extends Migration
             $table->id();
             $table->string('nombre')->nullable(false);
             $table->enum('tipo', ['LENGUAJE', 'IDIOMA', 'APTITUD', 'OTRO'])->nullable(false);
-            $table->string('descripcion');
         });
     }
 
