@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\DTO\PaginacionDTO;
 use App\DTO\PerfilProfesional\PerfilProfesionalRespuestaDTO;
 use App\DTO\Ubicacion\UbicacionRespuestaDTO;
+use App\DTO\Usuario\UsuarioListadoDTO;
 use App\DTO\Usuario\UsuarioRespuestaDTO;
 use App\Enums\RolEnum;
 use App\Exceptions\CustomException;
@@ -84,7 +85,7 @@ class UsuarioController extends Controller
 
         $usuariosDTO = [];
         foreach ($usuarios->items() as $usuario) {
-            $usuariosDTO[] = new UsuarioRespuestaDTO($usuario);
+            $usuariosDTO[] = new UsuarioListadoDTO($usuario);
         }
 
         return response()->json(new PaginacionDTO(
