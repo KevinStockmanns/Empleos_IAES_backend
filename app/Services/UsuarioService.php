@@ -39,8 +39,8 @@ class UsuarioService
             'apellido' => $data['apellido'],
             'correo' => $data['correo'],
             'clave' => $isAdmin
-                ? $data['dni']
-                : $data['clave'],
+                ? Hash::make($data['dni'])
+                : Hash::make($data['clave']),
             'dni' => $data['dni'],
             'estado' => EstadoUsuarioEnum::SOLICITADO->value,
             'fecha_nacimiento' => isset($data['fechaNacimiento'])
