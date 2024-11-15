@@ -30,8 +30,12 @@ class UsuarioController extends Controller
 
     public function registrarUsuario(RegistrarUsuarioRequest $request)
     {
-        $usuario = $this->usuarioService->registrar($request);
-        return response()->json(new UsuarioRespuestaDTO($usuario));
+        $admin = null;
+        if(auth()->check()){
+            $admin = auth()->user();
+        }
+        $usuario = $this->usuarioService->registrar($request, $admin);
+        return response()->json(new UsuarioRespuestaDTO($usuario['usuario'], $usuario['token']));
     }
 
     public function putUsuario(UsuarioActualizarRequest $req)
@@ -45,9 +49,9 @@ class UsuarioController extends Controller
 
     public function obtenerUsuario($id)
     {
-        // if(!auth()->check()){
-        //     throw new CustomException('token requerido',403);
-        // }
+        if (!auth()->check()) {
+            return response()->json(['error' => 'Unauthorized'], 401);
+        }
         $usuario = $this->usuarioService->obtenerById($id);
 
         if (!$usuario) {

@@ -3,6 +3,7 @@
 namespace App\Services;
 
 
+use App\Enums\EstadoUsuarioEnum;
 use App\Enums\RolEnum;
 use App\Exceptions\CustomException;
 use App\Http\Requests\Usuario\RegistrarUsuarioRequest;
@@ -22,30 +23,47 @@ class UsuarioService
     {
         $this->ubicacionService = $ubicacionService;
     }
-    public function registrar(RegistrarUsuarioRequest $request)
+    public function registrar(RegistrarUsuarioRequest $request, Usuario|null $admin)
     {
+        $isAdmin = $admin !=null && $admin->isAdmin();
         $data = $request->validated();
         $rol = Rol::firstOrCreate([
-            'nombre' => isset($data['rol'])
-                ? $data['rol']
-                : RolEnum::ALUMNO->value,
+            'nombre' => $data['rol'],
         ]);
+        $direccion = null;
+        if(isset($data['ubicacion'])){
+            $direccion = $this->ubicacionService->registrarOrBuscar($data['ubicacion']);
+        }
         $usuario = new Usuario([
             'nombre' => $data['nombre'],
             'apellido' => $data['apellido'],
             'correo' => $data['correo'],
-            'clave' => $this->encryptPassword($data['clave']),
+            'clave' => $isAdmin
+                ? $data['dni']
+                : $data['clave'],
             'dni' => $data['dni'],
-            'estado' => $data['estado'],
+            'estado' => EstadoUsuarioEnum::SOLICITADO->value,
             'fecha_nacimiento' => isset($data['fechaNacimiento'])
                 ? Carbon::createFromFormat('Y-m-d', $data['fechaNacimiento'])
                 : null,
-            'direccion_id' => null,
+            'direccion_id' => $direccion->id ?? null,
         ]);
         $usuario->rol_id = $rol->id;
 
         $usuario->save();
-        return $usuario;
+
+        $claims = [
+            'rol' => $usuario->rol->nombre,
+            'username' => $usuario->correo,
+            'exp' => now()->addHours(4)->timestamp
+        ];
+
+        $token = JWTAuth::claims($claims)->fromUser($usuario);
+
+        return [
+            'usuario'=>$usuario,
+            'token'=> $token
+        ];
     }
 
     public function obtenerById($id)

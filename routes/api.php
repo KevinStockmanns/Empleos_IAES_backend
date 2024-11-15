@@ -23,7 +23,7 @@ Route::prefix('/v1/usuarios')->group(function() {
     Route::post("/login", [UsuarioController::class, 'loginUsuario']);
     Route::post("/", [UsuarioController::class, 'registrarUsuario']);
 
-    Route::middleware('auth:api')->group(function () {
+    Route::middleware('jwt')->group(function () {
         Route::get("/{id}", [UsuarioController::class, 'obtenerUsuario']);
         Route::get("/", [UsuarioController::class, 'listarUsuarios']);
         Route::put("/{id}", [UsuarioController::class, 'putUsuario']);

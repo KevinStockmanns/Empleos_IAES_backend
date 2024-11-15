@@ -20,7 +20,7 @@ return new class extends Migration
             $table->string('correo')->unique();
             $table->date('fecha_nacimiento')->nullable(true);
             $table->string('clave');
-            $table->enum('estado',allowed:  array_column(EstadoUsuarioEnum::cases(), 'value'))->default(EstadoUsuarioEnum::PRIVADO->value);
+            $table->string('estado', 50);
             $table->foreignId("rol_id")->constrained('roles');
             $table->foreignId('direccion_id')->nullable(true)->default(null)->constrained('direcciones');
             $table->datetime('created_at')->useCurrent();

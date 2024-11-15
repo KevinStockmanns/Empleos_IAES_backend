@@ -9,8 +9,8 @@ class UsuarioRespuestaDTO
     public $dni;
     public $fechaNacimiento;
     public $estado;
-    public $token;
     public $rol;
+    public $token;
 
     public function __construct($usuario, $token = null)
     {

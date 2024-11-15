@@ -32,6 +32,11 @@ class RegistrarUsuarioRequest extends FormRequest
      * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
      */
     public function rules(): array{
+
+        $usuario = null;
+        if(auth()->check()){
+            $usuario = auth()->user();
+        }
         $rules = [
             'nombre' => 'required|min:3|max:100|regex:/^[a-zA-Z\sñÑáéíóúÁÉÍÓÚ]+$/',
             'apellido' => 'required|min:3|max:100|regex:/^[a-zA-Z\sñÑáéíóúÁÉÍÓÚ]+$/',
@@ -39,14 +44,17 @@ class RegistrarUsuarioRequest extends FormRequest
             'fechaNacimiento' => 'before_or_equal:' . now()->subYears(18)->toDateString(),
             'clave' => 'required|min:8|max:20|regex:/^[a-zA-ZñÑ\-_0-9]+$/',
             'dni' => 'required|regex:/^[0-9]{7,12}$/|unique:usuarios,dni',
-            'estado' => [
-                'required',
-                Rule::in(array_column(EstadoUsuarioEnum::cases(), 'value'))
-            ],
-            'rol' => [
-                Rule::in(array_column(RolEnum::cases(), 'value'))
-            ]
+            'rol'=> ['required', Rule::in([RolEnum::ALUMNO->value, RolEnum::EGRESADO->value])]
         ];
+
+        if($usuario!=null && $usuario->isAdmin()){
+            $rules['clave'] = 'min:8|max:20|regex:/^[a-zA-ZñÑ\-_0-9]+$/';
+            $rules['estado'] = ["required", Rule::in(array_column(EstadoUsuarioEnum::cases(), 'value'))];
+            $rules['rol'] = [
+                'required',
+                Rule::in(array_column(RolEnum::cases(), 'value'))
+            ];
+        }
 
         if ($this->has('ubicacion')) {
             $ubicacion = new UbicacionRequest();
@@ -60,6 +68,13 @@ class RegistrarUsuarioRequest extends FormRequest
     public function messages(): array
     {
         $ubicacionRequest = new UbicacionRequest();
+        $usuario = auth()->user();
+        
+        if ($usuario != null && $usuario->isAdmin()) {
+            $rolMessage = 'El rol debe ser uno de los siguientes valores: ' . implode(', ', array_column(RolEnum::cases(), 'value'));
+        } else {
+            $rolMessage = 'El rol debe ser uno de los siguientes valores: ALUMNO, EGRESADO';
+        }
         return array_merge(
             [
                 'nombre.required' => 'El nombre es requerido',
@@ -85,7 +100,8 @@ class RegistrarUsuarioRequest extends FormRequest
                 'dni.unique' => 'El DNI ya está en uso',
                 'estado.required' => 'El estado es requerido',
                 'estado.in' => 'El estado debe ser uno de los siguientes valores: ' . implode(', ', array_column(EstadoUsuarioEnum::cases(), 'value')),
-                'rol.in' => 'El rol debe ser uno de los siguientes valores: ' . implode(', ', array_column(RolEnum::cases(), 'value')),
+                'rol.required'=>'El rol es requerido',
+                'rol.in' => $rolMessage,
             ],
             $ubicacionRequest->messages(),
         );
