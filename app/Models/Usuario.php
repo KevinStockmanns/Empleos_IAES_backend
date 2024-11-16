@@ -19,6 +19,12 @@ class Usuario extends Authenticatable implements JWTSubject
 
     protected $fillable = ['nombre', 'apellido', 'fecha_nacimiento', 'dni', 'correo', 'clave','estado', 'direccion_id'];
 
+
+    public function isAdmin(){
+        if($this->rol->nombre == "ADMIN" || $this->rol->nombre == "DEV")
+        return false;
+    }
+
     public function rol()
     {
         return $this->belongsTo(Rol::class);

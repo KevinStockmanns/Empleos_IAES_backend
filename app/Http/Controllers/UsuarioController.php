@@ -31,7 +31,7 @@ class UsuarioController extends Controller
     public function registrarUsuario(RegistrarUsuarioRequest $request)
     {
         $admin = null;
-        if(auth()->check()){
+        if (auth()->check()) {
             $admin = auth()->user();
         }
         $usuario = $this->usuarioService->registrar($request, $admin);
@@ -136,9 +136,15 @@ class UsuarioController extends Controller
         return response()->json(new PerfilProfesionalRespuestaDTO($perfil));
     }
 
-    public function getRoles(){
-        return response()->json(
-           [ "roles" => array_column(RolEnum::cases(), 'value')]
+    public function getRoles()
+    {
+        $roles = array_filter(
+            RolEnum::cases(),
+            fn($role) => $role->value !== "DEV"
         );
+
+        return response()->json([
+            "roles" => array_column($roles, 'value')
+        ]);
     }
 }
