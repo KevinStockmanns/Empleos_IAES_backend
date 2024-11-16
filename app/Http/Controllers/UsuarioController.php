@@ -49,9 +49,9 @@ class UsuarioController extends Controller
 
     public function obtenerUsuario($id)
     {
-        if (!auth()->check()) {
-            return response()->json(['error' => 'Unauthorized'], 401);
-        }
+        // if (!auth()->check()) {
+        //     return response()->json(['error' => 'Unauthorized'], 401);
+        // }
         $usuario = $this->usuarioService->obtenerById($id);
 
         if (!$usuario) {
@@ -136,5 +136,9 @@ class UsuarioController extends Controller
         return response()->json(new PerfilProfesionalRespuestaDTO($perfil));
     }
 
-
+    public function getRoles(){
+        return response()->json(
+           [ "roles" => array_column(RolEnum::cases(), 'value')]
+        );
+    }
 }
