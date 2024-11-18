@@ -18,10 +18,13 @@ use Tymon\JWTAuth\Facades\JWTAuth;
 class UsuarioService
 {
     private $ubicacionService;
+    private $contactoService;
 
-    public function __construct(UbicacionService $ubicacionService)
-    {
+    public function __construct(UbicacionService $ubicacionService,
+        ContactoService $contactoService
+    ){
         $this->ubicacionService = $ubicacionService;
+        $this->contactoService = $contactoService;
     }
     public function registrar(RegistrarUsuarioRequest $request, Usuario|null $admin)
     {
@@ -180,6 +183,24 @@ class UsuarioService
 
         return Usuario::where('rol_id', $rolId)
             ->paginate($size, ['*'], 'page', $page);
+    }
+
+    public function cargarContacto($data, $idUsuario){
+        $usuario = Usuario::find($idUsuario);
+        if(!$usuario){
+            throw new CustomException('No se encontro el usuario con el id '. $idUsuario, 404);
+        }
+
+        $contacto = $usuario->contacto;
+        if($contacto){
+            $contacto= $this->contactoService->actualizarContacto($contacto, $data['contacto']);
+        }else{
+            $contacto= $this->contactoService->crearContacto($data['contacto']);
+            $usuario->contacto_id = $contacto->id;
+            $usuario->save();
+        }
+
+        return $contacto;
     }
 
 

@@ -2,6 +2,7 @@
 
 namespace App\Exceptions;
 
+use App\DTO\ErrorDTO;
 use Illuminate\Contracts\Validation\ValidatesWhenResolved;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Illuminate\Validation\ValidationException;
@@ -62,10 +63,12 @@ class Handler extends ExceptionHandler
     //     }
 
     //     if($exception instanceof CustomException){
-    //         return response()->json([
-    //             'message'=>'error de logica',
-    //             'errors'=> $exception->getMessage()
-    //         ], $exception->getStatus());
+    //         return response()->json(
+    //             new ErrorDTO('error de logica', 
+    //                 ['error'=> $exception->getMessage()]
+    //             ),
+    //             $exception->getStatus()
+    //         );
     //     }
 
     //     return response()->json([

@@ -14,10 +14,10 @@ return new class extends Migration
         Schema::create('contactos', function (Blueprint $table) {
             $table->id();
             $table->string('numero_telefono');
-            $table->string('telefono_fijo');
-            $table->string('linkedin',50);
-            $table->string('pagina_web');
-            $table->foreignId("user_id")->constrained("usuarios");
+            $table->string('telefono_fijo')->nullable();
+            $table->string('linkedin',50)->nullable();
+            $table->string('pagina_web')->nullable();
+            // $table->foreignId("usuario_id")->constrained("usuarios");
         });
     }
 

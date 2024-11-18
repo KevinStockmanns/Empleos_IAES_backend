@@ -20,9 +20,8 @@ class Usuario extends Authenticatable implements JWTSubject
     protected $fillable = ['nombre', 'apellido', 'fecha_nacimiento', 'dni', 'correo', 'clave','estado', 'direccion_id'];
 
 
-    public function isAdmin(){
-        if($this->rol->nombre == "ADMIN" || $this->rol->nombre == "DEV")
-        return false;
+    public function isAdmin(): bool{
+        return ($this->rol->nombre == "ADMIN" || $this->rol->nombre == "DEV");
     }
 
     public function rol()
@@ -48,6 +47,9 @@ class Usuario extends Authenticatable implements JWTSubject
     }
     public function pasantias(){
         return $this->hasMany(Pasantia::class);
+    }
+    public function contacto(){
+        return $this->belongsTo(Contact::class);
     }
 
 

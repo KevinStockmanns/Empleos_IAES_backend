@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Services\ContactoService;
 use App\Services\EmpresaService;
 use App\Services\EncryptService;
 use App\Services\HorarioService;
@@ -20,7 +21,10 @@ class AppServiceProvider extends ServiceProvider
         //     return new UsuarioService($app->make(EncryptService::class));
         // });
         $this->app->singleton(UsuarioService::class, function ($app) {
-            return new UsuarioService($app->make(UbicacionService::class));
+            return new UsuarioService(
+                $app->make(UbicacionService::class),
+                $app->make(ContactoService::class),
+            );
         });
         $this->app->singleton(EmpresaService::class, function($app){
             return new EmpresaService(

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\DTO\Contacto\ContactoRespuestaDTO;
 use App\DTO\PaginacionDTO;
 use App\DTO\PerfilProfesional\PerfilProfesionalRespuestaDTO;
 use App\DTO\Ubicacion\UbicacionRespuestaDTO;
@@ -9,6 +10,7 @@ use App\DTO\Usuario\UsuarioListadoDTO;
 use App\DTO\Usuario\UsuarioRespuestaDTO;
 use App\Enums\RolEnum;
 use App\Exceptions\CustomException;
+use App\Http\Requests\DTO\Contacto\ContactoRequest;
 use App\Http\Requests\UbicacionRequest;
 use App\Http\Requests\Usuario\RegistrarUsuarioRequest;
 use App\Http\Requests\Usuario\UsuarioActualizarRequest;
@@ -146,5 +148,13 @@ class UsuarioController extends Controller
         return response()->json([
             "roles" => array_column($roles, 'value')
         ]);
+    }
+    
+    public function postContacto(ContactoRequest $req){
+        $data = $req->validated();
+        $idUsuario = $req->route('id');
+        $contacto = $this->usuarioService->cargarContacto($data, $idUsuario);
+
+        return response()->json(new ContactoRespuestaDTO($contacto));
     }
 }

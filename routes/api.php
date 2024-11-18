@@ -30,6 +30,7 @@ Route::prefix('/v1/usuarios')->group(function() {
         Route::put("/{id}", [UsuarioController::class, 'putUsuario']);
         Route::post('/{id}/ubicacion', [UsuarioController::class, 'postUbicacion']);
         Route::post("/{id}/perfil_profesional", [UsuarioController::class, 'postPerfilProfesional']);
+        Route::post('/{id}/contacto', [UsuarioController::class, 'postContacto']);
     });
 });
 
