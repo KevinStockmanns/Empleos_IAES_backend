@@ -6,6 +6,7 @@ use App\DTO\Contacto\ContactoRespuestaDTO;
 use App\DTO\PaginacionDTO;
 use App\DTO\PerfilProfesional\PerfilProfesionalRespuestaDTO;
 use App\DTO\Ubicacion\UbicacionRespuestaDTO;
+use App\DTO\Usuario\UsuarioDetalleDTO;
 use App\DTO\Usuario\UsuarioListadoDTO;
 use App\DTO\Usuario\UsuarioRespuestaDTO;
 use App\Enums\RolEnum;
@@ -15,6 +16,7 @@ use App\Http\Requests\UbicacionRequest;
 use App\Http\Requests\Usuario\RegistrarUsuarioRequest;
 use App\Http\Requests\Usuario\UsuarioActualizarRequest;
 use App\Http\Requests\Usuario\UsuarioCompletarRequest;
+use App\Http\Requests\Usuario\UsuarioDetalleRequest;
 use App\Http\Requests\Usuario\UsuarioLoginRequest;
 use App\Http\Requests\Usuario\UsuarioPerfilProfesionalRequest;
 use App\Services\UsuarioService;
@@ -156,5 +158,11 @@ class UsuarioController extends Controller
         $contacto = $this->usuarioService->cargarContacto($data, $idUsuario);
 
         return response()->json(new ContactoRespuestaDTO($contacto));
+    }
+
+    public function getDetalleUsuario(UsuarioDetalleRequest $request){
+        $id = $request->validated()['id'];
+        $usuario = $this->usuarioService->obtenerById($id);
+        return response()->json(new UsuarioDetalleDTO($usuario));
     }
 }

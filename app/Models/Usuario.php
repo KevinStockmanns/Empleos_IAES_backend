@@ -42,7 +42,7 @@ class Usuario extends Authenticatable implements JWTSubject
     }
 
     
-    public function direcciones() {
+    public function direccion() {
         return $this->belongsTo(Direccion::class);
     }
     public function pasantias(){
