@@ -26,12 +26,13 @@ Route::prefix('/v1/usuarios')->group(function() {
     Route::middleware('jwt')->group(function () {
         Route::get("/", [UsuarioController::class, 'listarUsuarios']);
         Route::get("/roles", [UsuarioController::class, 'getRoles']);
-        Route::get('/{id}/details', [UsuarioController::class, 'getDetalleUsuario']);
+        Route::get('/{id}/detalles', [UsuarioController::class, 'getDetalleUsuario']);
         Route::get("/{id}", [UsuarioController::class, 'obtenerUsuario']);
         Route::put("/{id}", [UsuarioController::class, 'putUsuario']);
         Route::post('/{id}/ubicacion', [UsuarioController::class, 'postUbicacion']);
         Route::post("/{id}/perfil_profesional", [UsuarioController::class, 'postPerfilProfesional']);
         Route::post('/{id}/contacto', [UsuarioController::class, 'postContacto']);
+        Route::post('/{id}/habilidades', [UsuarioController::class, 'postHabilidades']);
     });
 });
 

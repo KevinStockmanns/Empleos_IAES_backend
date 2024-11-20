@@ -2,6 +2,7 @@
 namespace App\DTO\Usuario;
 
 use App\DTO\Contacto\ContactoRespuestaDTO;
+use App\DTO\Habilidad\HabilidadRespuestaDTO;
 use App\DTO\PerfilProfesional\PerfilProfesionalRespuestaDTO;
 use App\DTO\Ubicacion\UbicacionRespuestaDTO;
 use App\Models\Usuario;
@@ -19,12 +20,14 @@ class UsuarioDetalleDTO{
     public $perfilProfesional;
     public $contacto;
     public $ubicacion;
+    public $habilidades;
     
 
     public function __construct(Usuario $usuario){
         $contacto = $usuario->contacto;
         $perfilP = $usuario->perfilProfesional;
         $direccion = $usuario->direccion;
+        $habilidades = $usuario->habilidades;
 
         $this->id = $usuario->id ?? null;
         $this->correo = $usuario->correo ?? null;
@@ -39,5 +42,10 @@ class UsuarioDetalleDTO{
             : null;
         $this->perfilProfesional = $perfilP ? new PerfilProfesionalRespuestaDTO($perfilP):null;
         $this->ubicacion = $direccion ? new UbicacionRespuestaDTO($direccion) :null;
+        $this->habilidades = $habilidades
+            ? array_map(function($hab){
+                return new HabilidadRespuestaDTO($hab);
+            }, $habilidades->all())
+            : [];
     }
 }

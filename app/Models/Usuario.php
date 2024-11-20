@@ -29,7 +29,10 @@ class Usuario extends Authenticatable implements JWTSubject
         return $this->belongsTo(Rol::class);
     }
     public function habilidades(){
-        return $this->belongsToMany(Habilidad::class, 'habilidad_usuario');
+        return $this->belongsToMany(Habilidad::class, 'habilidad_usuario',
+        'usuario_id',
+        'habilidad_id'
+    );
     }
     public function licenciaConducir(){
         return $this->hasOne(LicenciaConducir::class);

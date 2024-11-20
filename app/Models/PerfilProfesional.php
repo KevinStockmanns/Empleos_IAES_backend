@@ -14,6 +14,6 @@ class PerfilProfesional extends Model
     public $guarded = ['id'];
 
     public function usuario(){
-        $this->belongsTo(Usuario::class);
+        return $this->belongsTo(Usuario::class);
     }
 }

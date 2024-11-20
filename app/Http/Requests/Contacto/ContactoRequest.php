@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Requests\DTO\Contacto;
+namespace App\Http\Requests\Contacto;
 
 use App\Validators\ValidatorHandler;
 use App\Validators\ValidatorsGeneral\UsuarioHasPermission;

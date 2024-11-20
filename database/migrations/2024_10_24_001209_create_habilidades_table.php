@@ -13,8 +13,9 @@ return new class extends Migration
     {
         Schema::create('habilidades', function (Blueprint $table) {
             $table->id();
-            $table->string('nombre')->nullable(false);
-            $table->enum('tipo', ['LENGUAJE', 'IDIOMA', 'APTITUD', 'OTRO'])->nullable(false);
+            $table->string('nombre',100)->nullable(false);
+            $table->string('tipo', 50)->nullable(false);
+            $table->boolean('visible')->default(false);
         });
     }
 

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\DTO\Contacto\ContactoRespuestaDTO;
+use App\DTO\Habilidad\HabilidadRespuestaDTO;
 use App\DTO\PaginacionDTO;
 use App\DTO\PerfilProfesional\PerfilProfesionalRespuestaDTO;
 use App\DTO\Ubicacion\UbicacionRespuestaDTO;
@@ -11,7 +12,8 @@ use App\DTO\Usuario\UsuarioListadoDTO;
 use App\DTO\Usuario\UsuarioRespuestaDTO;
 use App\Enums\RolEnum;
 use App\Exceptions\CustomException;
-use App\Http\Requests\DTO\Contacto\ContactoRequest;
+use App\Http\Requests\Contacto\ContactoRequest;
+use App\Http\Requests\Habilidad\HabilidadRegistrarRequest;
 use App\Http\Requests\UbicacionRequest;
 use App\Http\Requests\Usuario\RegistrarUsuarioRequest;
 use App\Http\Requests\Usuario\UsuarioActualizarRequest;
@@ -159,6 +161,20 @@ class UsuarioController extends Controller
 
         return response()->json(new ContactoRespuestaDTO($contacto));
     }
+
+    public function postHabilidades(HabilidadRegistrarRequest $req){
+        $idUsuario = $req->route('id');
+        $data = $req->validated();
+        $habilidades = $this->usuarioService->cargarHabilidades($idUsuario, $data);
+
+        return response()->json([
+            'habilidades' => array_map(function($habilidad){
+                return new HabilidadRespuestaDTO($habilidad);
+            }, $habilidades)
+        ]);
+    
+    }
+    
 
     public function getDetalleUsuario(UsuarioDetalleRequest $request){
         $id = $request->validated()['id'];

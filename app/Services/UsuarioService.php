@@ -19,12 +19,15 @@ class UsuarioService
 {
     private $ubicacionService;
     private $contactoService;
+    private $habilidadService;
 
     public function __construct(UbicacionService $ubicacionService,
-        ContactoService $contactoService
+        ContactoService $contactoService,
+        HabilidadService $habilidadService
     ){
         $this->ubicacionService = $ubicacionService;
         $this->contactoService = $contactoService;
+        $this->habilidadService = $habilidadService;
     }
     public function registrar(RegistrarUsuarioRequest $request, Usuario|null $admin)
     {
@@ -201,6 +204,20 @@ class UsuarioService
         }
 
         return $contacto;
+    }
+
+    public function cargarHabilidades($idUsuario, $data): array{
+        $usuario = Usuario::find($idUsuario);
+        if(!$usuario){
+            throw new CustomException('No se econtro un usuario con el id ingresado', 404);
+        }
+        $habilidades = $this->habilidadService->buscarOCrear($data);
+
+        $usuario->habilidades()->sync(
+            collect($habilidades)->pluck('id')->toArray()
+        );
+
+        return $habilidades;
     }
 
 
