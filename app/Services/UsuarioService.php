@@ -3,6 +3,7 @@
 namespace App\Services;
 
 
+use App\DTO\Usuario\UsuarioPerfilCompletoDTO;
 use App\Enums\EstadoUsuarioEnum;
 use App\Enums\RolEnum;
 use App\Exceptions\CustomException;
@@ -218,6 +219,26 @@ class UsuarioService
         );
 
         return $habilidades;
+    }
+
+
+    public function calcularPerfilCompletado($idUsuario){
+        $usuario = $this->obtenerById($idUsuario);
+
+        $datos = [
+            ['Contacto', $usuario->contacto()->exists()],
+            ['Información Profesional', $usuario->perfilProfesional()->exists()],
+            ['Habilidades', $usuario->habilidades()->exists()],
+            ['Ubicación',$usuario->direccion()->exists()],
+        ];
+
+        $datosTotales = count($datos);
+        $datosCompletos = count(array_filter($datos, function($d){
+            return $d[1];
+        }));
+        $porcentaje = $datosCompletos * 100 / $datosTotales;
+
+        return new UsuarioPerfilCompletoDTO($porcentaje, $datos);
     }
 
 

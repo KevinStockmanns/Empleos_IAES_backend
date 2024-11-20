@@ -181,4 +181,10 @@ class UsuarioController extends Controller
         $usuario = $this->usuarioService->obtenerById($id);
         return response()->json(new UsuarioDetalleDTO($usuario));
     }
+
+    public function getPerfilCompletado(Request $req){
+        $idUsuario = $req->route('id');
+        $data = $this->usuarioService->calcularPerfilCompletado($idUsuario);
+        return response()->json($data);
+    }
 }

@@ -27,6 +27,7 @@ Route::prefix('/v1/usuarios')->group(function() {
         Route::get("/", [UsuarioController::class, 'listarUsuarios']);
         Route::get("/roles", [UsuarioController::class, 'getRoles']);
         Route::get('/{id}/detalles', [UsuarioController::class, 'getDetalleUsuario']);
+        Route::get('/{id}/completado', [UsuarioController::class, 'getPerfilCompletado']);
         Route::get("/{id}", [UsuarioController::class, 'obtenerUsuario']);
         Route::put("/{id}", [UsuarioController::class, 'putUsuario']);
         Route::post('/{id}/ubicacion', [UsuarioController::class, 'postUbicacion']);
