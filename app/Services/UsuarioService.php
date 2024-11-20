@@ -49,7 +49,9 @@ class UsuarioService
                 ? Hash::make($data['dni'])
                 : Hash::make($data['clave']),
             'dni' => $data['dni'],
-            'estado' => EstadoUsuarioEnum::SOLICITADO->value,
+            'estado' => $isAdmin
+                ? EstadoUsuarioEnum::ALTA->value
+                : EstadoUsuarioEnum::SOLICITADO->value,
             'fecha_nacimiento' => isset($data['fechaNacimiento'])
                 ? Carbon::createFromFormat('Y-m-d', $data['fechaNacimiento'])
                 : null,
