@@ -230,6 +230,8 @@ class UsuarioService
             ['Información Profesional', $usuario->perfilProfesional()->exists()],
             ['Habilidades', $usuario->habilidades()->exists()],
             ['Ubicación',$usuario->direccion()->exists()],
+            ['Foto de Perfil', false],
+            ['Currículum', false],
         ];
 
         $datosTotales = count($datos);
