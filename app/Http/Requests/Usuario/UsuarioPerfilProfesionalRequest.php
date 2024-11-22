@@ -49,7 +49,7 @@ class UsuarioPerfilProfesionalRequest extends FormRequest
             'perfilProfesional.cargo.regex'=>'el cargo solo acepta letras y espacios en blanco',
 
             'perfilProfesional.cartaPresentacion.string'=>'la carta de presentación debe ser texto',
-            'perfilProfesional.cartaPresentacion.min'=>'ña carta de presentación tener al menos :min caracteres',
+            'perfilProfesional.cartaPresentacion.min'=>'la carta de presentación tener al menos :min caracteres',
             'perfilProfesional.cartaPresentacion.max'=>'la carta de presentación puede tener hasta :max caractres',
             'perfilProfesional.cartaPresentacion.regex'=>'la carta de presentación tiene caracteres inválidos',
 

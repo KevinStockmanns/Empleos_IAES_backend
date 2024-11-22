@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('cargo');
             $table->text('carta_presentacion')->nullable();
             $table->string('cv')->nullable();
-            $table->enum('disponibilidad', array_column(DisponibilidadEnum::cases(), 'value'));
+            $table->string('disponibilidad', 50);
             $table->boolean('disponibilidad_mudanza')->default(false);
             $table->foreignId('usuario_id')->constrained('usuarios');
         });
