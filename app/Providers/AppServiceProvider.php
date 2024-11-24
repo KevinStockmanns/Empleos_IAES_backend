@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Services\FileService;
 use App\Services\ContactoService;
 use App\Services\EmpresaService;
 use App\Services\EncryptService;
@@ -26,6 +27,7 @@ class AppServiceProvider extends ServiceProvider
                 $app->make(UbicacionService::class),
                 $app->make(ContactoService::class),
                 $app->make(HabilidadService::class),
+                $app->make(FileService::class),
             );
         });
         $this->app->singleton(EmpresaService::class, function($app){

@@ -19,11 +19,13 @@ use App\Http\Requests\Usuario\RegistrarUsuarioRequest;
 use App\Http\Requests\Usuario\UsuarioActualizarRequest;
 use App\Http\Requests\Usuario\UsuarioCompletarRequest;
 use App\Http\Requests\Usuario\UsuarioDetalleRequest;
+use App\Http\Requests\Usuario\UsuarioImagenRequest;
 use App\Http\Requests\Usuario\UsuarioLoginRequest;
 use App\Http\Requests\Usuario\UsuarioPerfilProfesionalRequest;
 use App\Services\UsuarioService;
 use Auth;
 use Illuminate\Http\Request;
+use Intervention\Image\Image;
 
 class UsuarioController extends Controller
 {
@@ -186,5 +188,12 @@ class UsuarioController extends Controller
         $idUsuario = $req->route('id');
         $data = $this->usuarioService->calcularPerfilCompletado($idUsuario);
         return response()->json($data);
+    }
+
+
+    public function postPerfilImage(UsuarioImagenRequest $req){
+        $data = $req->validated();
+        // return response()->json(storage_path());
+        return response()->json($this->usuarioService->postPerfilImagen($req));
     }
 }

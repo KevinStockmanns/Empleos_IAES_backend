@@ -8,9 +8,11 @@ use App\Enums\EstadoUsuarioEnum;
 use App\Enums\RolEnum;
 use App\Exceptions\CustomException;
 use App\Http\Requests\Usuario\RegistrarUsuarioRequest;
+use App\Http\Requests\Usuario\UsuarioImagenRequest;
 use App\Models\PerfilProfesional;
 use App\Models\Rol;
 use App\Models\Usuario;
+use App\Service\FileServices;
 use Carbon\Carbon;
 use Hash;
 use Tymon\JWTAuth\Exceptions\JWTException;
@@ -21,14 +23,17 @@ class UsuarioService
     private $ubicacionService;
     private $contactoService;
     private $habilidadService;
+    private $fileService;
 
     public function __construct(UbicacionService $ubicacionService,
         ContactoService $contactoService,
-        HabilidadService $habilidadService
+        HabilidadService $habilidadService,
+        FileService $fileService
     ){
         $this->ubicacionService = $ubicacionService;
         $this->contactoService = $contactoService;
         $this->habilidadService = $habilidadService;
+        $this->fileService = $fileService;
     }
     public function registrar(RegistrarUsuarioRequest $request, Usuario|null $admin)
     {
@@ -77,7 +82,11 @@ class UsuarioService
 
     public function obtenerById($id)
     {
-        return Usuario::find($id);
+        $usuario = Usuario::find($id);
+        if(!$usuario){
+            throw new CustomException('El usuario no fue encontrado en la base de datos', 404);
+        }
+        return $usuario;
     }
 
     public function login($username, $clave)
@@ -243,6 +252,16 @@ class UsuarioService
         $porcentaje = $datosCompletos * 100 / $datosTotales;
 
         return new UsuarioPerfilCompletoDTO($porcentaje, $datos);
+    }
+
+    public function postPerfilImagen(UsuarioImagenRequest $req){
+        $usuario = $this->obtenerById($req->route('id'));
+        $fileName = $this->fileService->saveImage($req, $usuario->foto_perfil);
+
+        $usuario->foto_perfil = $fileName;
+        $usuario->save();
+
+        return $fileName;
     }
 
 

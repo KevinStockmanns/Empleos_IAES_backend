@@ -21,6 +21,7 @@ return new class extends Migration
             $table->date('fecha_nacimiento')->nullable(true);
             $table->string('clave');
             $table->string('estado', 50);
+            $table->string('foto_perfil')->nullable()->default(null);
             $table->foreignId("rol_id")->constrained('roles');
             $table->foreignId('direccion_id')->nullable(true)->default(null)->constrained('direcciones');
             $table->foreignId('contacto_id')->nullable()->constrained('contactos');

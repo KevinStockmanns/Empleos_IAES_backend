@@ -34,6 +34,10 @@ Route::prefix('/v1/usuarios')->group(function() {
         Route::post("/{id}/perfil_profesional", [UsuarioController::class, 'postPerfilProfesional']);
         Route::post('/{id}/contacto', [UsuarioController::class, 'postContacto']);
         Route::post('/{id}/habilidades', [UsuarioController::class, 'postHabilidades']);
+        // Route::post('/{id}/foto_perfil', [UsuarioController::class, 'postPerfilImage']);
+
+        Route::post('/{id}/imagen', [UsuarioController::class, 'postPerfilImage'])
+            ->middleware('api');
     });
 });
 
