@@ -36,9 +36,9 @@ Route::prefix('/v1/usuarios')->group(function() {
         Route::post('/{id}/habilidades', [UsuarioController::class, 'postHabilidades']);
         // Route::post('/{id}/foto_perfil', [UsuarioController::class, 'postPerfilImage']);
 
-        Route::post('/{id}/imagen', [UsuarioController::class, 'postPerfilImage'])
-            ->middleware('api');
+        Route::post('/{id}/imagen', [UsuarioController::class, 'postPerfilImage']);
     });
+    Route::get('/imagen/{image}', [UsuarioController::class, 'getFotoPerfil']);
 });
 
 Route::prefix('/v1/empresas')->group(function(){

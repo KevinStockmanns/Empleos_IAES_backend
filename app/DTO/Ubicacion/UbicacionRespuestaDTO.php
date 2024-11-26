@@ -10,6 +10,7 @@ class UbicacionRespuestaDTO{
     public $pais;
     public $provincia;
     public $localidad;
+    public $barrio;
     public $calle;
     public $numero;
     public $piso;
@@ -20,6 +21,7 @@ class UbicacionRespuestaDTO{
         $this->piso = $direccion->piso;
         $this->numero = $direccion->numero;
         $this->calle = $direccion->calle;
+        $this->barrio = $direccion->barrio;
         $this->localidad = $localidad->nombre;
         $this->provincia = $provincia->nombre;
         $this->pais = $provincia->pais->nombre;

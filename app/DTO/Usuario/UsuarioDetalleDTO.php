@@ -16,6 +16,7 @@ class UsuarioDetalleDTO{
     public $fechaNacimiento;
     public $estado;
     public $rol;
+    public $fotoPerfil;
 
     public $perfilProfesional;
     public $contacto;
@@ -37,6 +38,7 @@ class UsuarioDetalleDTO{
         $this->fechaNacimiento = $usuario->fecha_nacimiento ?? null;
         $this->estado = $usuario->estado ?? null;
         $this->rol = $usuario->rol->nombre ?? null;
+        $this->fotoPerfil = $usuario->foto_perfil;
         $this->contacto = $contacto 
             ? new ContactoRespuestaDTO($contacto)
             : null;

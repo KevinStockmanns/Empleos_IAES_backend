@@ -196,4 +196,10 @@ class UsuarioController extends Controller
         // return response()->json(storage_path());
         return response()->json($this->usuarioService->postPerfilImagen($req));
     }
+
+    public function getFotoPerfil(Request $req){
+        $imageName = $req->route('image');
+        $imagen = $this->usuarioService->getFotoPerfil($imageName);
+        return $imagen;
+    }
 }

@@ -241,7 +241,7 @@ class UsuarioService
             ['Información Profesional', $usuario->perfilProfesional()->exists()],
             ['Habilidades', $usuario->habilidades()->exists()],
             ['Ubicación',$usuario->direccion()->exists()],
-            ['Foto de Perfil', false],
+            ['Foto de Perfil', $usuario->foto_perfil == true],
             ['Currículum', false],
         ];
 
@@ -262,6 +262,10 @@ class UsuarioService
         $usuario->save();
 
         return $fileName;
+    }
+
+    public function getFotoPerfil($imageName){
+        return $this->fileService->getFile($imageName);
     }
 
 
