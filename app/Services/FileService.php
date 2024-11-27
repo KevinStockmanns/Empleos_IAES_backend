@@ -24,7 +24,7 @@ class FileService{
             $fileName = time() . '_' . uniqid() . '.' . $imagen->getClientOriginalExtension();
 
             $img = $this->manager->read($imagen->getRealPath());
-            $img->scaleDown(width: 500, height: 500);
+            $img->scaleDown(width: 350, height: 350);
 
             $directorio = storage_path($this->imgPath);
             if (!file_exists($directorio)) {

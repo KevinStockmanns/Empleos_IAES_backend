@@ -14,7 +14,7 @@ class UsuarioListadoDTO{
     public $estadoPerfil;
     public $disponibilidad;
 
-    public function __construct(Usuario $usuario) {
+    public function __construct(Usuario $usuario, $perfilCompletoDto = null) {
         // Cargamos la relación perfilProfesional si no está cargada
         $usuario->loadMissing('perfilProfesional');
 
@@ -25,7 +25,7 @@ class UsuarioListadoDTO{
         $this->dni = $usuario->dni;
         $this->fechaNacimiento = $usuario->fecha_nacimiento;
         $this->estado = $usuario->estado;
-        $this->estadoPerfil = 0;
+        $this->estadoPerfil = $perfilCompletoDto->completo ?? 0;
 
         $perfilProf = $usuario->perfilProfesional;
         $this->disponibilidad = $perfilProf ? $perfilProf->disponibilidad : null;

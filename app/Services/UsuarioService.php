@@ -233,8 +233,13 @@ class UsuarioService
     }
 
 
-    public function calcularPerfilCompletado($idUsuario){
-        $usuario = $this->obtenerById($idUsuario);
+    public function calcularPerfilCompletado($usuarioOrId){
+        $usuario=null;
+        if($usuarioOrId instanceof Usuario){
+            $usuario = $usuarioOrId;
+        }else{
+            $usuario = $this->obtenerById($usuarioOrId);
+        }
 
         $datos = [
             ['Contacto', $usuario->contacto()->exists()],

@@ -97,7 +97,7 @@ class UsuarioController extends Controller
 
         $usuariosDTO = [];
         foreach ($usuarios->items() as $usuario) {
-            $usuariosDTO[] = new UsuarioListadoDTO($usuario);
+            $usuariosDTO[] = new UsuarioListadoDTO($usuario, $this->usuarioService->calcularPerfilCompletado($usuario));
         }
 
         return response()->json(new PaginacionDTO(
