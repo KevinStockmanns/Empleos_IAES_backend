@@ -6,6 +6,7 @@ use App\DTO\Contacto\ContactoRespuestaDTO;
 use App\DTO\Habilidad\HabilidadRespuestaDTO;
 use App\DTO\PaginacionDTO;
 use App\DTO\PerfilProfesional\PerfilProfesionalRespuestaDTO;
+use App\DTO\Titulo\TituloRespuestaDTO;
 use App\DTO\Ubicacion\UbicacionRespuestaDTO;
 use App\DTO\Usuario\UsuarioDetalleDTO;
 use App\DTO\Usuario\UsuarioListadoDTO;
@@ -14,6 +15,7 @@ use App\Enums\RolEnum;
 use App\Exceptions\CustomException;
 use App\Http\Requests\Contacto\ContactoRequest;
 use App\Http\Requests\Habilidad\HabilidadRegistrarRequest;
+use App\Http\Requests\Titulos\TituloRegistrarRequest;
 use App\Http\Requests\UbicacionRequest;
 use App\Http\Requests\Usuario\RegistrarUsuarioRequest;
 use App\Http\Requests\Usuario\UsuarioActualizarRequest;
@@ -24,6 +26,7 @@ use App\Http\Requests\Usuario\UsuarioLoginRequest;
 use App\Http\Requests\Usuario\UsuarioPerfilProfesionalRequest;
 use App\Services\UsuarioService;
 use Auth;
+use Cache;
 use Illuminate\Http\Request;
 use Intervention\Image\Image;
 
@@ -201,5 +204,12 @@ class UsuarioController extends Controller
         $imageName = $req->route('image');
         $imagen = $this->usuarioService->getFotoPerfil($imageName);
         return $imagen;
+    }
+
+
+    public function postEducacion(TituloRegistrarRequest $req){
+        $data=$req->validated();
+        $tituloDetalle = $this->usuarioService->cargarEducacion($data);
+        return response()->json(new TituloRespuestaDTO($tituloDetalle));
     }
 }

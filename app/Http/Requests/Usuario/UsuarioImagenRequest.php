@@ -55,10 +55,7 @@ class UsuarioImagenRequest extends FormRequest
             $usuario = auth()->user();
             $handler->addValidator(new UsuarioHasPermission($idUsuario, $usuario));
 
-            $errors=$handler->validate();
-            foreach ($errors as $key => $message) {
-                $validator->errors()->add($key, $message);
-            }
+            $handler->validate();
         });
     }
 

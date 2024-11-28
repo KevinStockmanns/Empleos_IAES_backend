@@ -9,6 +9,10 @@ class Titulo extends Model
 {
     use HasFactory;
 
+    public $table = 'titulos';
+    public $timestamps = false;
+    public $guarded = ['id'];
+
     public function detalles(){
         return $this->hasMany(TituloDetalle::class);
     }

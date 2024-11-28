@@ -49,11 +49,7 @@ class ContactoRequest extends FormRequest
             $usuario = auth()->user();
             $handler = new ValidatorHandler();
             $handler->addValidator(new UsuarioHasPermission($idUsuario, $usuario));
-            $errors = $handler->validate();
-            
-            foreach ($errors as $key => $message) {
-                $validator->errors()->add($key, $message);
-            }
+            $handler->validate();
         });
     }
 

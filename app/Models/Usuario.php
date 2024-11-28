@@ -55,6 +55,10 @@ class Usuario extends Authenticatable implements JWTSubject
         return $this->belongsTo(Contact::class);
     }
 
+    public function tituloDetalles(){
+        return $this->hasMany(TituloDetalle::class);
+    }
+
 
 
     /**

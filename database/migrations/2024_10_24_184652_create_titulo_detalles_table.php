@@ -14,10 +14,12 @@ return new class extends Migration
         Schema::create('titulos_detalles', function (Blueprint $table) {
             $table->id();
             $table->date('fecha_inicio');
-            $table->date("fecha_final");
-            $table->decimal('promedio', 4,2);
-            $table->string('tipo')->nullable(false);
+            $table->date("fecha_final")->nullable();
+            $table->decimal('promedio', 4,2)->nullable();
+            $table->string('tipo');
+            $table->text('descripcion')->nullable();
             $table->foreignId('titulo_id')->constrained('titulos');
+            $table->foreignId('usuario_id')->constrained('usuarios');
         });
     }
 

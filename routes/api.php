@@ -37,6 +37,8 @@ Route::prefix('/v1/usuarios')->group(function() {
         // Route::post('/{id}/foto_perfil', [UsuarioController::class, 'postPerfilImage']);
 
         Route::post('/{id}/imagen', [UsuarioController::class, 'postPerfilImage']);
+
+        Route::post('{id}/titulo', [UsuarioController::class, 'postEducacion']);
     });
     Route::get('/imagen/{image}', [UsuarioController::class, 'getFotoPerfil']);
 });

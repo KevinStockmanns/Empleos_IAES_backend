@@ -11,6 +11,8 @@ use App\Http\Requests\Usuario\RegistrarUsuarioRequest;
 use App\Http\Requests\Usuario\UsuarioImagenRequest;
 use App\Models\PerfilProfesional;
 use App\Models\Rol;
+use App\Models\Titulo;
+use App\Models\TituloDetalle;
 use App\Models\Usuario;
 use App\Service\FileServices;
 use Carbon\Carbon;
@@ -23,16 +25,19 @@ class UsuarioService
     private $ubicacionService;
     private $contactoService;
     private $habilidadService;
+    private $tituloService;
     private $fileService;
 
     public function __construct(UbicacionService $ubicacionService,
         ContactoService $contactoService,
         HabilidadService $habilidadService,
-        FileService $fileService
+        FileService $fileService,
+        TituloService $tituloService
     ){
         $this->ubicacionService = $ubicacionService;
         $this->contactoService = $contactoService;
         $this->habilidadService = $habilidadService;
+        $this->tituloService = $tituloService;
         $this->fileService = $fileService;
     }
     public function registrar(RegistrarUsuarioRequest $request, Usuario|null $admin)
@@ -271,6 +276,12 @@ class UsuarioService
 
     public function getFotoPerfil($imageName){
         return $this->fileService->getFile($imageName);
+    }
+
+    public function cargarEducacion($data): TituloDetalle{
+        $usuario = request()->attributes->get('usuarioValidado');
+        $tituloDetalle = $this->tituloService->registrarTitulo($data['titulo'], $usuario->id);
+        return $tituloDetalle;
     }
 
 

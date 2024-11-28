@@ -8,6 +8,7 @@ use App\Services\EmpresaService;
 use App\Services\EncryptService;
 use App\Services\HabilidadService;
 use App\Services\HorarioService;
+use App\Services\TituloService;
 use App\Services\UbicacionService;
 use App\Services\UsuarioService;
 use Illuminate\Support\ServiceProvider;
@@ -28,6 +29,7 @@ class AppServiceProvider extends ServiceProvider
                 $app->make(ContactoService::class),
                 $app->make(HabilidadService::class),
                 $app->make(FileService::class),
+                $app->make(TituloService::class),
             );
         });
         $this->app->singleton(EmpresaService::class, function($app){

@@ -9,7 +9,14 @@ class TituloDetalle extends Model
 {
     use HasFactory;
 
+    public $table= 'titulos_detalles';
+    public $timestamps=false;
+    public $guarded = ['id'];
+
     public function titulo(){
         return $this->belongsTo(Titulo::class);
+    }
+    public function usuario(){
+        return $this->belongsTo(Usuario::class);
     }
 }

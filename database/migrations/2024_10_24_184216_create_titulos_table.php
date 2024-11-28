@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('nombre');
             $table->string('institucion');
-            $table->string('nombre_alias');
+            $table->string('alias')->nullable();
         });
     }
 

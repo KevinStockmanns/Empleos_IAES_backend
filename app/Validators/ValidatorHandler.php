@@ -8,15 +8,9 @@ class ValidatorHandler{
         $this->validators[] = $validator;
     }
 
-    public function validate(): array {
-        $errors = [];
-
+    public function validate(): void {
         foreach ($this->validators as $validator) {
-            if (!$validator->validate()) {
-                $errors = array_merge($errors, $validator->message());
-            }
+            $validator->validate();
         }
-
-        return $errors;
     }
 }
