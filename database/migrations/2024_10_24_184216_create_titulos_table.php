@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('nombre');
             $table->string('institucion');
             $table->string('alias')->nullable();
+            $table->boolean('visible')->default(false);
         });
     }
 
