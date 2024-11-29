@@ -209,7 +209,12 @@ class UsuarioController extends Controller
 
     public function postEducacion(TituloRegistrarRequest $req){
         $data=$req->validated();
-        $tituloDetalle = $this->usuarioService->cargarEducacion($data);
-        return response()->json(new TituloRespuestaDTO($tituloDetalle));
+        $tituloDetalles = $this->usuarioService->cargarEducacion($data);
+
+        return response()->json([
+            'titulos' => array_map(function($detalle){
+                return new TituloRespuestaDTO($detalle);
+            }, $tituloDetalles)
+        ]);
     }
 }

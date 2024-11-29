@@ -28,19 +28,19 @@ class TituloRegistrarRequest extends FormRequest
     {
         return [
             'id'=>['required', 'integer', new OwnerOrAdmin],
-            'titulo.nombre'=>'required|max:100|regex:/^[a-zA-ZáéíóúÁÉÍÓÚÑñ\s\-0-9]+$/',
-            'titulo.institucion'=>'required|max:100|regex:/^[a-zA-ZáéíóúÁÉÍÓÚÑñ\s\-0-9]+$/',
-            'titulo.alias'=>'nullable|max:12',
+            'titulos'=>'required|array|min:1',
+            'titulos.*.nombre'=>'required|max:100|regex:/^[a-zA-ZáéíóúÁÉÍÓÚÑñ\s\-0-9]+$/',
+            'titulos.*.institucion'=>'required|max:100|regex:/^[a-zA-ZáéíóúÁÉÍÓÚÑñ\s\-0-9]+$/',
+            'titulos.*.alias'=>'nullable|max:12',
 
-            // 'titulo.titulos'=> 'required|array|min:1',
-            'titulo.fechaInicio'=> 'required|date|before:today',
-            'titulo.fechaFin'=> 'nullable|date',
-            'titulo.promedio'=> 'nullable|numeric|min:0|max:10|regex:/^\d{1,2}(\d{1,2})?$/',
-            'titulo.tipo'=>[
+            'titulos.*.fechaInicio'=> 'required|date|before:today',
+            'titulos.*.fechaFin'=> 'nullable|date',
+            'titulos.*.promedio'=> 'nullable|numeric|min:0|max:10|regex:/^\d{1,2}(\d{1,2})?$/',
+            'titulos.*.tipo'=>[
                 'required',
                 Rule::in(array_column(TituloTipoEnum::cases(), 'value'))
             ],
-            'titulo.descripcion'=>'nullable|string|min:50|max:400'
+            'titulos.*.descripcion'=>'nullable|string|min:50|max:400'
         ];
     }
 
@@ -49,37 +49,37 @@ class TituloRegistrarRequest extends FormRequest
             'id.required' => 'El ID del usuario es obligatorio.',
             'id.integer' => 'El ID del usuario debe ser un número entero.',
 
-            'titulo.nombre.required'=>'El nombre del titulo es requerido.',
-            'titulo.nombre.max'=>'El nombre del titulo puede tener hasta :max caracteres.',
-            'titulo.nombre.regex'=>'El nombre del titulo acepta letras y números.',
+            'titulos.*.nombre.required'=>'El nombre del titulo es requerido.',
+            'titulos.*.nombre.max'=>'El nombre del titulo puede tener hasta :max caracteres.',
+            'titulos.*.nombre.regex'=>'El nombre del titulo acepta letras y números.',
 
-            'titulo.institucion.required'=> 'El nombre de la institución es requerido.',
-            'titulo.institucion.max'=> 'El nombre de la institución puede tener hasta :max caracteres.',
-            'titulo.institucion.regex'=> 'El nombre de la institución acepta letras y números.',
+            'titulos.*.institucion.required'=> 'El nombre de la institución es requerido.',
+            'titulos.*.institucion.max'=> 'El nombre de la institución puede tener hasta :max caracteres.',
+            'titulos.*.institucion.regex'=> 'El nombre de la institución acepta letras y números.',
 
-            'titulo.alias.max'=>'El alias puede tener hasta :max caracteres',
+            'titulos.*.alias.max'=>'El alias puede tener hasta :max caracteres',
 
-            // 'titulo.required'=> 'Los titulos son requeridos',
-            // 'titulo.array'=> 'Los titulos deben ser arreglos',
-            // 'titulo.min'=> 'Los titulos deben tener al menos :min dato(s)',
+            'titulos.required'=> 'Los titulos son requeridos',
+            'titulos.array'=> 'Los titulos deben ser arreglos',
+            'titulos.min'=> 'Los titulos deben tener al menos :min dato(s)',
 
-            'titulo.fechaInicio.required'=> 'La fecha de inicio es requerida.',
-            'titulo.fechaInicio.date'=> 'La fecha de inicio es inválida.',
-            'titulo.fechaInicio.before'=> 'La fecha de inicio no puede ser posterior a la fecha.',
+            'titulos.*.fechaInicio.required'=> 'La fecha de inicio es requerida.',
+            'titulos.*.fechaInicio.date'=> 'La fecha de inicio es inválida.',
+            'titulos.*.fechaInicio.before'=> 'La fecha de inicio no puede ser posterior a la fecha.',
 
-            'titulo.fechaFin.date'=> 'La fecha de fin es inválida.',
+            'titulos.*.fechaFin.date'=> 'La fecha de fin es inválida.',
 
-            'titulo.promedio.numeric'=> 'El promedio debe ser un número.',
-            'titulo.promedio.min'=> 'El promedio debe ser como minimo :min.',
-            'titulo.promedio.max'=> 'El promedio puede valer hasta :max.',
-            'titulo.promedio.regex'=> 'El promedio debe estar separado por un punto.',
+            'titulos.*.promedio.numeric'=> 'El promedio debe ser un número.',
+            'titulos.*.promedio.min'=> 'El promedio debe ser como minimo :min.',
+            'titulos.*.promedio.max'=> 'El promedio puede valer hasta :max.',
+            'titulos.*.promedio.regex'=> 'El promedio debe estar separado por un punto.',
 
-            'titulo.tipo.required'=> 'El "tipo" es requerido.',
-            'titulo.tipo.in'=> 'El dato "tipo" solo acepta: ' . implode(', ', array_column(TituloTipoEnum::cases(), 'value')) . '.',
+            'titulos.*.tipo.required'=> 'El "tipo" es requerido.',
+            'titulos.*.tipo.in'=> 'El dato "tipo" solo acepta: ' . implode(', ', array_column(TituloTipoEnum::cases(), 'value')) . '.',
             
-            'titulo.descripcion.string'=>'La descripción debe ser texto.',
-            'titulo.descripcion.min'=>'La descripción debe tener :min caracteres.',
-            'titulo.descripcion.max'=>'La descripción puede tener hasta :max caracteres.',
+            'titulos.*.descripcion.string'=>'La descripción debe ser texto.',
+            'titulos.*.descripcion.min'=>'La descripción debe tener :min caracteres.',
+            'titulos.*.descripcion.max'=>'La descripción puede tener hasta :max caracteres.',
         ];
     }
 
@@ -94,7 +94,7 @@ class TituloRegistrarRequest extends FormRequest
             $handler = new ValidatorHandler();
             $idUsuario = $this->route('id');
             $usuario = auth()->user();
-            $handler->addValidator(new ValidarTituloSinRepetir($this->input('titulo.nombre'), $this->input('titulo.institucion')));
+            $handler->addValidator(new ValidarTituloSinRepetir($this->validated()));
 
             $handler->validate();
         });

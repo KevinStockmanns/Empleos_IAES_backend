@@ -7,18 +7,22 @@ use App\Models\TituloDetalle;
 class TituloService{
 
 
-    public function registrarTitulo($data, $idUsuario): TituloDetalle{
-        $titulo = $this->findOrRegistrarTitulo($data['nombre'], $data['institucion'], $data['alias'] ?? null);
+    public function registrarTitulo($data, $idUsuario): array{
+        $titulos = [];
+        foreach($data['titulos'] as $tituloDto){
+            $titulo = $this->findOrRegistrarTitulo($tituloDto['nombre'], $tituloDto['institucion'], $tituloDto['alias'] ?? null);
 
-        return TituloDetalle::create([
-            'fecha_inicio'=> $data['fechaInicio'],
-            'fecha_fin'=> $data['fechaFin'] ?? null,
-            'promedio'=> $data['promedio'] ?? null,
-            'tipo'=> $data['tipo'],
-            'descripcion'=> $data['descripcion'] ?? null,
-            'titulo_id'=> $titulo->id,
-            'usuario_id'=> $idUsuario
-        ]);
+            $titulos[]= TituloDetalle::create([
+                'fecha_inicio'=> $tituloDto['fechaInicio'],
+                'fecha_fin'=> $tituloDto['fechaFin'] ?? null,
+                'promedio'=> $tituloDto['promedio'] ?? null,
+                'tipo'=> $tituloDto['tipo'],
+                'descripcion'=> $tituloDto['descripcion'] ?? null,
+                'titulo_id'=> $titulo->id,
+                'usuario_id'=> $idUsuario
+            ]);
+        }
+        return $titulos;
     }
 
     private function findOrRegistrarTitulo(string $nombre, string $institucion, string|null $alias=null): Titulo{
