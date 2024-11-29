@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\Titulos;
 
+use App\Enums\AccionCrudEnum;
 use App\Enums\TituloTipoEnum;
 use App\Rules\OwnerOrAdmin;
 use App\Validators\Titulo\Registrar\ValidarTituloSinRepetir;
@@ -29,15 +30,19 @@ class TituloRegistrarRequest extends FormRequest
         return [
             'id'=>['required', 'integer', new OwnerOrAdmin],
             'titulos'=>'required|array|min:1',
-            'titulos.*.nombre'=>'required|max:100|regex:/^[a-zA-ZáéíóúÁÉÍÓÚÑñ\s\-0-9]+$/',
-            'titulos.*.institucion'=>'required|max:100|regex:/^[a-zA-ZáéíóúÁÉÍÓÚÑñ\s\-0-9]+$/',
+
+            'titulos.*.id'=>'integer',
+
+            'titulos.*.accion'=>['required', Rule::in(array_column(AccionCrudEnum::cases(), 'value'))],
+            'titulos.*.nombre'=>'max:100|regex:/^[a-zA-ZáéíóúÁÉÍÓÚÑñ\s\-0-9]+$/',
+            'titulos.*.institucion'=>'max:100|regex:/^[a-zA-ZáéíóúÁÉÍÓÚÑñ\s\-0-9]+$/',
             'titulos.*.alias'=>'nullable|max:12',
 
-            'titulos.*.fechaInicio'=> 'required|date|before:today',
+            'titulos.*.fechaInicio'=> 'date|before:today',
             'titulos.*.fechaFin'=> 'nullable|date',
             'titulos.*.promedio'=> 'nullable|numeric|min:0|max:10|regex:/^\d{1,2}(\d{1,2})?$/',
             'titulos.*.tipo'=>[
-                'required',
+                // 'required',
                 Rule::in(array_column(TituloTipoEnum::cases(), 'value'))
             ],
             'titulos.*.descripcion'=>'nullable|string|min:50|max:400'
@@ -48,6 +53,11 @@ class TituloRegistrarRequest extends FormRequest
         return [
             'id.required' => 'El ID del usuario es obligatorio.',
             'id.integer' => 'El ID del usuario debe ser un número entero.',
+
+            'titulos.*.id.integer'=>'El id del titulo debe ser un número entero.',
+
+            'titulos.*.accion.required'=>'La acción es requerida',
+            'titulos.*.accion.in'=>'La acción solo acepta: ' .implode(', ', array_column(AccionCrudEnum::cases(), 'value')) . '.',
 
             'titulos.*.nombre.required'=>'El nombre del titulo es requerido.',
             'titulos.*.nombre.max'=>'El nombre del titulo puede tener hasta :max caracteres.',
@@ -89,14 +99,14 @@ class TituloRegistrarRequest extends FormRequest
         ]);
     }
 
-    public function withValidator($validator){
-        $validator->after(function($validator){
-            $handler = new ValidatorHandler();
-            $idUsuario = $this->route('id');
-            $usuario = auth()->user();
-            $handler->addValidator(new ValidarTituloSinRepetir($this->validated()));
+    // public function withValidator($validator){
+    //     $validator->after(function($validator){
+    //         $handler = new ValidatorHandler();
+    //         $idUsuario = $this->route('id');
+    //         $usuario = auth()->user();
+    //         $handler->addValidator(new ValidarTituloSinRepetir($this->validated()));
 
-            $handler->validate();
-        });
-    }
+    //         $handler->validate();
+    //     });
+    // }
 }

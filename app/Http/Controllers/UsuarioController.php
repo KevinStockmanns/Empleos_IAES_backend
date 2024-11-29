@@ -212,9 +212,7 @@ class UsuarioController extends Controller
         $tituloDetalles = $this->usuarioService->cargarEducacion($data);
 
         return response()->json([
-            'titulos' => array_map(function($detalle){
-                return new TituloRespuestaDTO($detalle);
-            }, $tituloDetalles)
+            'titulos' => $tituloDetalles->map(fn($detalle) => new TituloRespuestaDTO($detalle))
         ]);
     }
 }

@@ -278,9 +278,9 @@ class UsuarioService
         return $this->fileService->getFile($imageName);
     }
 
-    public function cargarEducacion($data): array{
+    public function cargarEducacion($data){
         $usuario = request()->attributes->get('usuarioValidado');
-        $tituloDetalles = $this->tituloService->registrarTitulo($data, $usuario->id);
+        $tituloDetalles = $this->tituloService->registrarTitulo($data, $usuario);
         return $tituloDetalles;
     }
 

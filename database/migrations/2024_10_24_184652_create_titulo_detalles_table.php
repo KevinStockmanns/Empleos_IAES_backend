@@ -18,7 +18,7 @@ return new class extends Migration
             $table->decimal('promedio', 4,2)->nullable();
             $table->string('tipo');
             $table->text('descripcion')->nullable();
-            $table->foreignId('titulo_id')->constrained('titulos');
+            $table->foreignId('titulo_id')->constrained('titulos')->onDelete('cascade');
             $table->foreignId('usuario_id')->constrained('usuarios');
         });
     }

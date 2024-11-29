@@ -65,7 +65,7 @@ class Handler extends ExceptionHandler
          if($exception instanceof CustomException){
              return response()->json(
                  new ErrorDTO('error de logica', 
-                     [['error'=> $exception->getMessage()]]
+                     [[$exception->getField()=> $exception->getMessage()]]
                  ),
                  $exception->getStatus()
              );
