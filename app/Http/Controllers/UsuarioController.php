@@ -11,9 +11,11 @@ use App\DTO\Ubicacion\UbicacionRespuestaDTO;
 use App\DTO\Usuario\UsuarioDetalleDTO;
 use App\DTO\Usuario\UsuarioListadoDTO;
 use App\DTO\Usuario\UsuarioRespuestaDTO;
+use App\Enums\AccionCrudEnum;
 use App\Enums\RolEnum;
 use App\Exceptions\CustomException;
 use App\Http\Requests\Contacto\ContactoRequest;
+use App\Http\Requests\ExperienciaLaboral\ExpLaboralRegistrarRequest;
 use App\Http\Requests\Habilidad\HabilidadRegistrarRequest;
 use App\Http\Requests\Titulos\TituloRegistrarRequest;
 use App\Http\Requests\UbicacionRequest;
@@ -24,6 +26,8 @@ use App\Http\Requests\Usuario\UsuarioDetalleRequest;
 use App\Http\Requests\Usuario\UsuarioImagenRequest;
 use App\Http\Requests\Usuario\UsuarioLoginRequest;
 use App\Http\Requests\Usuario\UsuarioPerfilProfesionalRequest;
+use App\Models\Empresa;
+use App\Models\ExperienciaLaboral;
 use App\Services\UsuarioService;
 use Auth;
 use Cache;
@@ -214,5 +218,13 @@ class UsuarioController extends Controller
         return response()->json([
             'titulos' => $tituloDetalles->map(fn($detalle) => new TituloRespuestaDTO($detalle))
         ]);
+    }
+
+    public function postExperienciaLaboral(ExpLaboralRegistrarRequest $req){
+        $data = $req->validated();
+        
+        $expLaborales = $this->usuarioService->cargarExperienciaLaboral($data);
+
+        return response()->json($expLaborales);
     }
 }

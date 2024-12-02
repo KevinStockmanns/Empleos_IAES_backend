@@ -15,11 +15,18 @@ return new class extends Migration
             $table->id();
             $table->string('puesto');
             $table->string('empresa');
-            $table->text('descripcion');
-            $table->date('fecha_inicio')->nullable(false);
-            $table->date('fecha_terminacion');
-            $table->string('contacto');
-            $table->foreignId('usuario_id')->constrained('usuarios');
+            $table->date('fecha_inicio');
+            $table->date('fecha_terminacion')->nullable();
+            $table->text('descripcion')->nullable();
+            
+            $table->foreignId('usuario_id')
+                ->constrained('usuarios')
+                ->onDelete('cascade');
+
+            $table->foreignId('empresa_id')
+                ->nullable()
+                ->constrained('empresas')
+                ->onDelete('set null');
         });
     }
 

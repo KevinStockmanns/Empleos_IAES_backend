@@ -4,6 +4,7 @@ namespace App\DTO\Titulo;
 use App\Models\TituloDetalle;
 
 class TituloRespuestaDTO{
+    public $idtituloDetalle;
     public $nombre;
     public $institucion;
     public $alias;
@@ -16,6 +17,7 @@ class TituloRespuestaDTO{
     public function __construct(TituloDetalle $tituloDetalle){
         $titulo = $tituloDetalle->titulo;
 
+        $this->idTituloDetalle=$tituloDetalle->id;
         $this->nombre=$titulo->nombre;
         $this->institucion=$titulo->institucion;
         $this->alias=$titulo->alias;

@@ -4,11 +4,14 @@ namespace App\Services;
 
 
 use App\DTO\Usuario\UsuarioPerfilCompletoDTO;
+use App\Enums\AccionCrudEnum;
 use App\Enums\EstadoUsuarioEnum;
 use App\Enums\RolEnum;
 use App\Exceptions\CustomException;
 use App\Http\Requests\Usuario\RegistrarUsuarioRequest;
 use App\Http\Requests\Usuario\UsuarioImagenRequest;
+use App\Models\Empresa;
+use App\Models\ExperienciaLaboral;
 use App\Models\PerfilProfesional;
 use App\Models\Rol;
 use App\Models\Titulo;
@@ -282,6 +285,68 @@ class UsuarioService
         $usuario = request()->attributes->get('usuarioValidado');
         $tituloDetalles = $this->tituloService->registrarTitulo($data, $usuario);
         return $tituloDetalles;
+    }
+
+
+    public function cargarExperienciaLaboral($data){
+        $usuario = request()->attributes->get('usuarioValidado');
+        
+        $experienciasLaborales = $usuario->experienciasLaborales;
+        foreach($data['experienciaLaboral'] as $expDto){
+            $empresa = null;
+            if(isset($expDto['idEmpresa'])){
+                $empresa = Empresa::find($expDto['idEmpresa']);
+            }
+            if($expDto['accion'] == AccionCrudEnum::AGREGAR->value){
+                $expLab = ExperienciaLaboral::create([
+                    'puesto'=> $expDto['puesto'],
+                    'empresa'=> $expDto['empresa'] ?? $empresa->nombre,
+                    'fecha_inicio'=> $expDto['fechaInicio'],
+                    'fecha_terminacion'=> $expDto['fechaTerminacion'] ?? null,
+                    'descripcion'=> $expDto['descripcion'] ?? null,
+                    'usuario_id'=> $usuario->id,
+                    'empresa_id'=>$empresa->id ?? null
+                ]);
+                $experienciasLaborales->push($expLab);
+            }else if($expDto['accion'] == AccionCrudEnum::ACTUALIZAR->value){
+                $expLab = $experienciasLaborales->firstWhere('id', $expDto['id']);
+                if(!$expLab){
+                    throw new CustomException("No se ha encontrado la experiencia laboral con el id " . $expDto['id'] ." para actualizar",404);
+                }
+
+                if(isset($expDto['puesto'])){
+                    $expLab->puesto = $expDto['puesto'];
+                }
+                if(isset($expDto['empresa'])){
+                    $expLab->empresa = $expDto['empresa'];
+                }
+                if(isset($expDto['fechaInicio'])){
+                    $expLab->fecha_inicio = $expDto['fechaInicio'];
+                }
+                if(isset($expDto['fechaTerminacion'])){
+                    $expLab->fecha_terminacion = $expDto['fechaTerminacion'];
+                }
+                if(isset($expDto['descripcion'])){
+                    $expLab->descripcion = $expDto['descripcion'];
+                }
+                if(isset($expDto['idEmpresa'])){
+                    $expLab->empresa_id = $empresa->id;
+                    $expLab->nombre = $empresa->nombre;
+                }
+                $expLab->save();
+            }else if($expDto['accion'] == AccionCrudEnum::ELIMINAR->value){
+                $exp = $experienciasLaborales->firstWhere('id', $expDto['id']);
+                if(!$exp){
+                    throw new CustomException("No se ha encontrado la experiencia laboral con el id " . $expDto['id'] . " para eliminar", 404);
+                }
+                $exp->delete();
+                $experienciasLaborales = $experienciasLaborales->filter(function($exp) use ($expDto) {
+                    return $exp->id != $expDto['id'];
+                });
+            }
+        }
+
+        return $experienciasLaborales;
     }
 
 
