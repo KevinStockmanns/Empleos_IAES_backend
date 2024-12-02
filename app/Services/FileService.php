@@ -10,15 +10,42 @@ class FileService{
 
     private ImageManager $manager;
     private string $imgPath = 'app/public/imagenes';
+    private string $cvPath = 'app/public/cv';
 
     public function __construct() {
         $this->manager = new ImageManager(new Driver());
     }
 
+    public function saveCV($file, string|null $fileToDelete = null): string{
+    try {
+        if ($fileToDelete) {
+            $this->removeFile($fileToDelete, $this->cvPath);
+        }
+
+        if ($file->getClientOriginalExtension() !== 'pdf') {
+            throw new CustomException('El archivo debe estar en formato PDF', 400);
+        }
+
+        $fileName = time() . '_' . uniqid() . '.pdf';
+
+        $directory = storage_path($this->cvPath);
+        if (!file_exists($directory)) {
+            mkdir($directory, 0777, true);
+        }
+
+        $file->move($directory, $fileName);
+
+        return $fileName;
+    } catch (\Throwable $th) {
+        throw new CustomException('Ocurrió un error al cargar el CV: ' . $th->getMessage(), 500);
+    }
+}
+
+
     public function saveImage(UsuarioImagenRequest $req, string|null $fileToDelete=null){
         try {
             if($fileToDelete){
-                $this->removeFile($fileToDelete);
+                $this->removeFile($fileToDelete, $this->imgPath);
             }
             $imagen = $req->file("imagen");
             $fileName = time() . '_' . uniqid() . '.' . $imagen->getClientOriginalExtension();
@@ -39,10 +66,10 @@ class FileService{
         }
     }
 
-    public function removeFile(string $fileName){
-        $path = storage_path($this->imgPath . '/' . $fileName);
-        if (file_exists($path)) {
-            return unlink($path);
+    public function removeFile(string $fileName, string $path): bool {
+        $filePath = storage_path($path . '/' . $fileName);
+        if (file_exists($filePath)) {
+            return unlink($filePath);
         }
         return false;
     }
