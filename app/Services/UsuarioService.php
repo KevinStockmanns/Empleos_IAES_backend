@@ -250,11 +250,13 @@ class UsuarioService
         }
 
         $datos = [
+            ['Foto de Perfil', $usuario->foto_perfil == true],
             ['Contacto', $usuario->contacto()->exists()],
             ['Información Profesional', $usuario->perfilProfesional()->exists()],
             ['Habilidades', $usuario->habilidades()->exists()],
             ['Ubicación',$usuario->direccion()->exists()],
-            ['Foto de Perfil', $usuario->foto_perfil == true],
+            ['Educación',$usuario->tituloDetalles()->exists()],
+            ['Experiencia Laboral',$usuario->experienciasLaborales()->exists()],
             ['Currículum', false],
         ];
 
