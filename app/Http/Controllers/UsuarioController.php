@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\DTO\Contacto\ContactoRespuestaDTO;
+use App\DTO\ExperienciaLaboral\ExperienciaLaboralRespuestaDTO;
 use App\DTO\Habilidad\HabilidadRespuestaDTO;
 use App\DTO\PaginacionDTO;
 use App\DTO\PerfilProfesional\PerfilProfesionalRespuestaDTO;
@@ -225,6 +226,10 @@ class UsuarioController extends Controller
         
         $expLaborales = $this->usuarioService->cargarExperienciaLaboral($data);
 
-        return response()->json($expLaborales);
+        return response()->json([
+            'experienciasLaborales'=> $expLaborales->map(function($exp){
+                return new ExperienciaLaboralRespuestaDTO($exp);
+            })
+        ]);
     }
 }

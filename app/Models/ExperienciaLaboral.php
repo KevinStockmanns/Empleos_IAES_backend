@@ -15,4 +15,7 @@ class ExperienciaLaboral extends Model
     public function usuario(){
         return $this->belongsTo(Usuario::class);
     }
+    public function empresa(){
+        return $this->belongsTo(Empresa::class);
+    }
 }

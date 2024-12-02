@@ -63,15 +63,13 @@ class ExpLaboralRegistrarRequest extends FormRequest
         }
 
         foreach ($expLaboralesDto as $index => $item) {
-            // Verificar si falta el idEmpresa y la empresa
-            if (empty($item['idEmpresa']) && empty($item['empresa'])) {
+            if (empty($item['idEmpresa']) && empty($item['empresa']) && $item['accion']== AccionCrudEnum::AGREGAR->value) {
                 $validator->errors()->add(
                     "experienciaLaboral.$index.empresa",
                     'El campo empresa es obligatorio si no se proporciona un idEmpresa.'
                 );
             }
 
-            // Verificar si la acción no es AGREGAR y falta el id
             if ($item['accion'] != AccionCrudEnum::AGREGAR->value && empty($item['id'])) {
                 $validator->errors()->add(
                     "experienciaLaboral.$index.id",
@@ -79,7 +77,6 @@ class ExpLaboralRegistrarRequest extends FormRequest
                 );
             }
 
-            // Verificar si la acción es AGREGAR
             if ($item['accion'] == AccionCrudEnum::AGREGAR->value) {
                 if (empty($item['puesto'])) {
                     $validator->errors()->add(
@@ -91,6 +88,22 @@ class ExpLaboralRegistrarRequest extends FormRequest
                     $validator->errors()->add(
                         "experienciaLaboral.$index.fechaInicio",
                         'La fecha de inicio es requerida.'
+                    );
+                }
+            }
+
+            if($item['accion']==AccionCrudEnum::ACTUALIZAR->value){
+                if(
+                    !isset($item['puesto'])
+                    && !isset($item['empresa'])
+                    && !isset($item['fechaInicio'])
+                    && !isset($item['fechaTerminacion'])
+                    && !isset($item['descripcion'])
+                    && !isset($item['idEmpresa'])
+                ){
+                    $validator->errors()->add(
+                        'experienciaLaboral.'.$index,
+                        'Para actualizar es requerido al menos un dato'
                     );
                 }
             }

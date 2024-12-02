@@ -292,7 +292,7 @@ class UsuarioService
         $usuario = request()->attributes->get('usuarioValidado');
         
         $experienciasLaborales = $usuario->experienciasLaborales;
-        foreach($data['experienciaLaboral'] as $expDto){
+        foreach($data['experienciaLaboral'] as $key => $expDto){
             $empresa = null;
             if(isset($expDto['idEmpresa'])){
                 $empresa = Empresa::find($expDto['idEmpresa']);
@@ -311,7 +311,7 @@ class UsuarioService
             }else if($expDto['accion'] == AccionCrudEnum::ACTUALIZAR->value){
                 $expLab = $experienciasLaborales->firstWhere('id', $expDto['id']);
                 if(!$expLab){
-                    throw new CustomException("No se ha encontrado la experiencia laboral con el id " . $expDto['id'] ." para actualizar",404);
+                    throw new CustomException("No se ha encontrado la experiencia laboral con el id " . $expDto['id'] ." para actualizar",404, "experienciaLaboral.$key.id");
                 }
 
                 if(isset($expDto['puesto'])){
@@ -337,7 +337,7 @@ class UsuarioService
             }else if($expDto['accion'] == AccionCrudEnum::ELIMINAR->value){
                 $exp = $experienciasLaborales->firstWhere('id', $expDto['id']);
                 if(!$exp){
-                    throw new CustomException("No se ha encontrado la experiencia laboral con el id " . $expDto['id'] . " para eliminar", 404);
+                    throw new CustomException("No se ha encontrado la experiencia laboral con el id " . $expDto['id'] . " para eliminar", 404, "experienciaLaboral.$key.id");
                 }
                 $exp->delete();
                 $experienciasLaborales = $experienciasLaborales->filter(function($exp) use ($expDto) {

@@ -25,4 +25,7 @@ class Empresa extends Model
     public function direccion(){
         return $this->belongsTo(Direccion::class);
     }
+    public function experienciasLaborales(){
+        return $this->hasMany(ExperienciaLaboral::class);
+    }
 }
