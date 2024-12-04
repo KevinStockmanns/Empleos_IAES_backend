@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\EmpresaController;
+use App\Http\Controllers\HabilidadController;
 use App\Http\Controllers\UsuarioController;
 use Illuminate\Support\Facades\Route;
 
@@ -49,4 +50,10 @@ Route::prefix('/v1/empresas')->group(function(){
 
     Route::post('/', [EmpresaController::class, 'postEmpresa']);
     Route::post('/{id}/ubicacion', [EmpresaController::class, 'cambiarUbicacion']);
+});
+
+Route::prefix('/v1/habilidades')->group(function(){
+    Route::middleware('jwt')->group(function(){
+        Route::get('/', [HabilidadController::class, 'getHabilidades']);
+    });
 });
