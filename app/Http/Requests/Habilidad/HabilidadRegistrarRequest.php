@@ -28,7 +28,7 @@ class HabilidadRegistrarRequest extends FormRequest
         return [
             'id' => 'required|integer',
             'habilidades' => 'required|array|min:1',
-            'habilidades.*.nombre' => 'required|string|min:3|max:100',
+            'habilidades.*.nombre' => 'required|string|min:2|max:100',
             'habilidades.*.tipo' => [
                 'required',
                 Rule::in(array_column(HabilidadEnum::cases(), 'value'))
