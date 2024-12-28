@@ -14,10 +14,10 @@ return new class extends Migration
     {
         Schema::create('perfil_profesional', function (Blueprint $table) {
             $table->id();
-            $table->string('cargo');
+            $table->string('cargo')->nullable();
             $table->text('carta_presentacion')->nullable();
             $table->string('cv')->nullable();
-            $table->string('disponibilidad', 50);
+            $table->string('disponibilidad', 50)->nullable();
             $table->boolean('disponibilidad_mudanza')->default(false);
             $table->foreignId('usuario_id')->constrained('usuarios');
         });

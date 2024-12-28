@@ -16,11 +16,12 @@ class FileService{
         $this->manager = new ImageManager(new Driver());
     }
 
-    public function saveCV($file, string|null $fileToDelete = null): string{
+    public function saveCV($req, string|null $fileToDelete = null): string{
     try {
         if ($fileToDelete) {
             $this->removeFile($fileToDelete, $this->cvPath);
         }
+        $file = $req->file('cv');
 
         if ($file->getClientOriginalExtension() !== 'pdf') {
             throw new CustomException('El archivo debe estar en formato PDF', 400);
@@ -74,9 +75,9 @@ class FileService{
         return false;
     }
 
-    public function getFile(string $fileName) {
+    public function getFile(string $fileName, bool $img = true) {
         try {
-            $path = storage_path($this->imgPath . '/' . $fileName);
+            $path = storage_path(($img ? $this->imgPath : $this->cvPath) . '/' . $fileName);
             
             if (!file_exists($path)) {
                 throw new CustomException('La imagen no existe', 404);

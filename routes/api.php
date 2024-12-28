@@ -39,10 +39,13 @@ Route::prefix('/v1/usuarios')->group(function() {
 
         Route::post('/{id}/imagen', [UsuarioController::class, 'postPerfilImage']);
 
+        Route::post('/{id}/cv', [UsuarioController::class, 'postCV']);
+
         Route::post('{id}/titulo', [UsuarioController::class, 'postEducacion']);
         Route::post('/{id}/expLaboral', [UsuarioController::class, 'postExperienciaLaboral']);
     });
     Route::get('/imagen/{image}', [UsuarioController::class, 'getFotoPerfil']);
+    Route::get('/cv/{cv}', [UsuarioController::class, 'getCV']);
 });
 
 Route::prefix('/v1/empresas')->group(function(){

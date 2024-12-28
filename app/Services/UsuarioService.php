@@ -9,6 +9,7 @@ use App\Enums\EstadoUsuarioEnum;
 use App\Enums\RolEnum;
 use App\Exceptions\CustomException;
 use App\Http\Requests\Usuario\RegistrarUsuarioRequest;
+use App\Http\Requests\Usuario\UsuarioCVRequest;
 use App\Http\Requests\Usuario\UsuarioImagenRequest;
 use App\Models\Empresa;
 use App\Models\ExperienciaLaboral;
@@ -281,6 +282,27 @@ class UsuarioService
 
     public function getFotoPerfil($imageName){
         return $this->fileService->getFile($imageName);
+    }
+
+    public function postCV(UsuarioCVRequest $req){
+        $usuario = $this->obtenerById($req->route('id'));
+        $fileName = $this->fileService->saveCV($req, $usuario->perfilProfesional->cv ?? null);
+
+        $perfilP = $usuario->perfilProfesional;
+        if($perfilP){
+            $perfilP->cv = $fileName;
+            $perfilP->save();
+        }else{
+            PerfilProfesional::create([
+                'cv'=> $fileName,
+                'usuario_id'=>$usuario->id
+            ]);
+        }
+
+        return $fileName;
+    }
+    public function getCV($imageName){
+        return $this->fileService->getFile($imageName, false);
     }
 
     public function cargarEducacion($data){

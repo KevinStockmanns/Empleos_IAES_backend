@@ -23,6 +23,7 @@ use App\Http\Requests\UbicacionRequest;
 use App\Http\Requests\Usuario\RegistrarUsuarioRequest;
 use App\Http\Requests\Usuario\UsuarioActualizarRequest;
 use App\Http\Requests\Usuario\UsuarioCompletarRequest;
+use App\Http\Requests\Usuario\UsuarioCVRequest;
 use App\Http\Requests\Usuario\UsuarioDetalleRequest;
 use App\Http\Requests\Usuario\UsuarioImagenRequest;
 use App\Http\Requests\Usuario\UsuarioLoginRequest;
@@ -208,6 +209,19 @@ class UsuarioController extends Controller
     public function getFotoPerfil(Request $req){
         $imageName = $req->route('image');
         $imagen = $this->usuarioService->getFotoPerfil($imageName);
+        return $imagen;
+    }
+
+    public function postCV(UsuarioCVRequest $req){
+        $req->validated();
+        $fileName = $this->usuarioService->postCV($req);
+
+        return response()->json($fileName);
+    }
+
+    public function getCV(Request $req){
+        $imageName = $req->route('cv');
+        $imagen = $this->usuarioService->getCV($imageName);
         return $imagen;
     }
 
