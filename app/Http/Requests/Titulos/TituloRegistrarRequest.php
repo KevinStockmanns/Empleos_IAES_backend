@@ -45,7 +45,7 @@ class TituloRegistrarRequest extends FormRequest
                 // 'required',
                 Rule::in(array_column(TituloTipoEnum::cases(), 'value'))
             ],
-            'titulos.*.descripcion'=>'nullable|string|min:50|max:400'
+            'titulos.*.descripcion'=>'nullable|string|min:50|max:500'
         ];
     }
 

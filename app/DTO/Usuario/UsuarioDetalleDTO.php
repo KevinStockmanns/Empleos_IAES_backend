@@ -4,6 +4,7 @@ namespace App\DTO\Usuario;
 use App\DTO\Contacto\ContactoRespuestaDTO;
 use App\DTO\Habilidad\HabilidadRespuestaDTO;
 use App\DTO\PerfilProfesional\PerfilProfesionalRespuestaDTO;
+use App\DTO\Titulo\TituloRespuestaDTO;
 use App\DTO\Ubicacion\UbicacionRespuestaDTO;
 use App\Models\Usuario;
 
@@ -22,6 +23,7 @@ class UsuarioDetalleDTO{
     public $contacto;
     public $ubicacion;
     public $habilidades;
+    public $educacion;
     
 
     public function __construct(Usuario $usuario){
@@ -49,5 +51,8 @@ class UsuarioDetalleDTO{
                 return new HabilidadRespuestaDTO($hab);
             }, $habilidades->all())
             : [];
+            $this->educacion = $usuario->tituloDetalles
+            ->map(fn($titulo) => new TituloRespuestaDTO($titulo))
+            ->toArray();
     }
 }

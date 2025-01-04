@@ -56,7 +56,9 @@ class Usuario extends Authenticatable implements JWTSubject
     }
 
     public function tituloDetalles(){
-        return $this->hasMany(TituloDetalle::class);
+        return $this->hasMany(TituloDetalle::class)
+            ->orderByRaw('ISNULL(fecha_final) DESC, fecha_final DESC')
+            ->orderBy('fecha_inicio', 'DESC');
     }
 
 

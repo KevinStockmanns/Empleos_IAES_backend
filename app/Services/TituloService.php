@@ -26,7 +26,7 @@ class TituloService{
 
                 $tituloDetalles[]= TituloDetalle::create([
                     'fecha_inicio'=> $tituloDto['fechaInicio'],
-                    'fecha_fin'=> $tituloDto['fechaFin'] ?? null,
+                    'fecha_final'=> $tituloDto['fechaFin'] ?? null,
                     'promedio'=> $tituloDto['promedio'] ?? null,
                     'tipo'=> $tituloDto['tipo'],
                     'descripcion'=> $tituloDto['descripcion'] ?? null,
@@ -54,7 +54,7 @@ class TituloService{
                             $detalle->fecha_inicio = $tituloDto['fechaInicio'];
                         }
                         if(isset($tituloDto['fechaFin'])){
-                            $detalle->fecha_fin = $tituloDto['fechaFin'];
+                            $detalle->fecha_final = $tituloDto['fechaFin'];
                         }
                         if(isset($tituloDto['promedio'])){
                             $detalle->promedio = $tituloDto['promedio'];
@@ -66,17 +66,18 @@ class TituloService{
                             $detalle->tipo = $tituloDto['tipo'];
                         }
                         if(
-                            isset($data['nombre'])
-                            || isset($data['institucion'])
-                            || isset($data['alias'])
+                            isset($tituloDto['nombre'])
+                            || isset($tituloDto['institucion'])
+                            || isset($tituloDto['alias'])
                         ){
                             $titulo = $detalle->titulo;
                             $newTitulo = $this->findOrRegistrarTitulo(
-                                $data['nombre'] ?? $titulo->nombre,
-                                $data['institucion'] ?? $titulo->institucion,
-                                $data['alias'] ?? $titulo->alias
+                                $tituloDto['nombre'] ?? $titulo->nombre,
+                                $tituloDto['institucion'] ?? $titulo->institucion,
+                                $tituloDto['alias'] ?? $titulo->alias
                             );
                             $detalle->titulo_id = $newTitulo->id;
+                            // dd($titulo, $newTitulo);
                         }
                         $detalle->save();
                         $actualizado=true;
@@ -88,6 +89,8 @@ class TituloService{
                 }
             }
         }
+
+        $usuario->load('tituloDetalles');
         return $tituloDetalles;
     }
 
@@ -102,7 +105,7 @@ class TituloService{
     private function crearTituloDetalle($data, $idTitulo, $idUsuario): TituloDetalle{
         return TituloDetalle::create([
             'fecha_inicio'=> $data['fechaInicio'],
-            'fecha_fin'=> $data['fechaFin'] ?? null,
+            'fecha_final'=> $data['fechaFin'] ?? null,
             'promedio'=> $data['promedio'] ?? null,
             'tipo'=> $data['tipo'],
             'descripcion'=> $data['descripcion'] ?? null,
