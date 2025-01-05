@@ -253,12 +253,12 @@ class UsuarioService
         $datos = [
             ['Foto de Perfil', $usuario->foto_perfil == true],
             ['Contacto', $usuario->contacto()->exists()],
-            ['Información Profesional', $usuario->perfilProfesional()->exists()],
+            ['Información Profesional', $usuario->perfilProfesional ? (($usuario->perfilProfesional->cargo || $usuario->perfilProfesional->carta_presentacion || $usuario->perfilProfesional->disponibilidad || $usuario->perfilProfesional->disponibilidad_mudanza) ?? false) : false],
             ['Habilidades', $usuario->habilidades()->exists()],
             ['Ubicación',$usuario->direccion()->exists()],
             ['Educación',$usuario->tituloDetalles()->exists()],
             ['Experiencia Laboral',$usuario->experienciasLaborales()->exists()],
-            ['Currículum', false],
+            ['Currículum', $usuario->perfilProfesional->cv ?? false],
         ];
 
         $datosTotales = count($datos);
