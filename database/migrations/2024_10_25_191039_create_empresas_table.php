@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('nombre',100)->nullable(false);
             $table->string('cuil_cuit',20)->nullable();
             $table->string('referente',50)->nullable();
+            $table->string('imagen')->nullable();
             $table->foreignId('usuario_id')->nullable()->constrained('usuarios');
             $table->foreignId('direccion_id')->nullable()->constrained('direcciones');
         });

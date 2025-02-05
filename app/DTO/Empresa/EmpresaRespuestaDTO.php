@@ -14,10 +14,11 @@ class EmpresaRespuestaDTO{
     public $usuario_id;
 
     public function __construct(Empresa $empresa){
+        $direccion = $empresa->direccion;
         $this->nombre = $empresa->nombre;
         $this->cuil_cuit = $empresa->cuil_cuit;
         $this->referente = $empresa->referente;
-        $this->ubicacion = new UbicacionRespuestaDTO($empresa->direccion);
+        $this->ubicacion = $direccion ? new UbicacionRespuestaDTO($empresa->direccion) : null;
         $this->usuario_id = $empresa->usuario_id;
         
         

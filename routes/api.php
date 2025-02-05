@@ -49,9 +49,15 @@ Route::prefix('/v1/usuarios')->group(function() {
 });
 
 Route::prefix('/v1/empresas')->group(function(){
+
+    Route::middleware('jwt')->group(function(){
+        Route::get('', [EmpresaController::class,'listarEmpresas']);
+        Route::get('/{id}', [EmpresaController::class,'getEmpresa']);
+        
+    });
+    Route::post('/', [EmpresaController::class, 'postEmpresa']);
     
 
-    Route::post('/', [EmpresaController::class, 'postEmpresa']);
     Route::post('/{id}/ubicacion', [EmpresaController::class, 'cambiarUbicacion']);
 });
 

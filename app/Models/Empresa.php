@@ -28,4 +28,8 @@ class Empresa extends Model
     public function experienciasLaborales(){
         return $this->hasMany(ExperienciaLaboral::class);
     }
+
+    public function usuario(){
+        return $this->belongsTo(Usuario::class);
+    }
 }

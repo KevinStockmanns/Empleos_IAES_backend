@@ -12,6 +12,11 @@ class Pasantia extends Model
     public $table = 'pasantias';
     public $timestamps = false;
 
+    protected $casts = [
+        'fecha_inicio' => 'date',
+        'fecha_final' => 'date',
+    ];
+
     public function empresa(){
         return $this->belongsTo(Empresa::class);
     }

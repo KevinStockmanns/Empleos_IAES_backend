@@ -5,6 +5,7 @@ use App\Exceptions\CustomException;
 use App\Models\Direccion;
 use App\Models\Empresa;
 use App\Models\Horario;
+use App\Models\Usuario;
 use DB;
 
 class EmpresaService
@@ -29,12 +30,16 @@ class EmpresaService
             if ($empresa) {
                 return $empresa;
             }
+            $usuario = null;
+            if(isset($data['idUsuario'])) {
+                $usuario = Usuario::find($data['idUsuario']);
+            }
 
-            $empresa = new Empresa([
+            $empresa = Empresa::create([
                 'nombre' => $data['nombre'],
                 'cuil_cuit' => $data['cuil_cuit'] ?? null,
                 'referente' => $data['referente'] ?? null,
-                'usuario_id' => null,
+                'usuario_id' => $usuario ? $usuario->id : null,
                 'direccion_id' => null,
                 'horario_id' => null,
             ]);

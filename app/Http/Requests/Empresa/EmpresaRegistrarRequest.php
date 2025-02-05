@@ -25,9 +25,9 @@ class EmpresaRegistrarRequest extends FormRequest
     {
         $rules = [
             'nombre' => 'required|max:100|min:3|regex:/^[a-zA-Z0-9ñÑáéíóúÁÉÍÓÚ\s]+$/',
-            'referente' => 'min:3|max:50|regex:/^[a-zA-ZñÑáéíóúÁÉÍÓÚ\s]+$/',
-            'cuil_cuit' => 'regex:/^\d{2}\-\d{7,10}\-\d$/',
-            'idUsuairo' => 'numeric'
+            'referente' => 'nullable|min:3|max:50|regex:/^[a-zA-ZñÑáéíóúÁÉÍÓÚ\s]+$/',
+            'cuil_cuit' => 'required|regex:/^\d{2}\-\d{7,10}\-\d$/|unique:empresas,cuil_cuit',
+            'idUsuairo' => 'nullable|numeric'
         ];
         if ($this->has('ubicacion')) {
             $ubicacion = new UbicacionRequest();
@@ -58,7 +58,9 @@ class EmpresaRegistrarRequest extends FormRequest
                 'referente.max' => 'el referente puede tener hasta :max caracteres',
                 'referente.regex' => 'el referente solo acepta letras y espacios en blanco',
 
-                'cuil_cuit.regex' => 'el cuil/cuit es inválido',
+                'cuil_cuit.regex' => 'el CUIL es inválido',
+                'cuil_cuit.required'=>'El CUIL es requerido.',
+                'cuil_cuit.unique'=>'El CUIL ya se encuentra en uso.',
 
                 'idUsuario.numeric' => 'el id del usuario debe ser un calor númerico',
             ],

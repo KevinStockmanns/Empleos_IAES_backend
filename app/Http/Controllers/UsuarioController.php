@@ -30,6 +30,7 @@ use App\Http\Requests\Usuario\UsuarioLoginRequest;
 use App\Http\Requests\Usuario\UsuarioPerfilProfesionalRequest;
 use App\Models\Empresa;
 use App\Models\ExperienciaLaboral;
+use App\Models\Usuario;
 use App\Services\UsuarioService;
 use Auth;
 use Cache;
@@ -79,16 +80,11 @@ class UsuarioController extends Controller
     }
 
 
-    public function listarUsuarios(Request $req)
-    {
+    public function listarUsuarios(Request $req){
         $page = $req->get('page', 1);
         $size = $req->get('size', 15);
-        $rol = $req->get('rol', RolEnum::ALUMNO->value);
 
-        if (!in_array($rol, array_map(fn($role) => $role->value, RolEnum::cases()))) {
-            $validRoles = implode(', ', array_map(fn($role) => $role->value, RolEnum::cases()));
-            throw new CustomException('El rol enviado no es válido. Los roles válidos son: ' . $validRoles, 400);
-        }
+        $query = Usuario::query();
 
         if (!is_numeric($page) || !is_numeric($size)) {
             throw new CustomException('Los parametros deben ser númericos', 400);
@@ -102,7 +98,33 @@ class UsuarioController extends Controller
             throw new CustomException('el parametro "page" debe ser mayor a 0', 400);
         }
 
-        $usuarios = $this->usuarioService->listarUsuarios($size, $page, $rol);
+        if($req->has('nombre')){
+            $nombre = $req->get('nombre');
+            $query->where(function($q) use ($nombre) {
+                $q->where('nombre', 'like', "%$nombre%")
+                  ->orWhere('apellido', 'like', "%$nombre%")
+                  ->orWhere('id', $nombre);
+            });
+        }
+        
+        if($req->has('rol')){
+            $rol = $req->get('rol', RolEnum::ALUMNO->value);
+
+            if (!in_array($rol, array_map(fn($role) => $role->value, RolEnum::cases()))) {
+                $validRoles = implode(', ', array_map(fn($role) => $role->value, RolEnum::cases()));
+                throw new CustomException('El rol enviado no es válido. Los roles válidos son: ' . $validRoles, 400);
+            }
+
+            $query->whereHas('rol', function($q) use ($rol) {
+                $q->where('nombre', $rol);
+            });
+        }
+        // dd($query->get());
+
+
+        $usuarios = $query->paginate($size, ['*'],'page', $page);
+
+
 
         $usuariosDTO = [];
         foreach ($usuarios->items() as $usuario) {

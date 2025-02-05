@@ -13,8 +13,8 @@ return new class extends Migration
         Schema::create('pasantias', function (Blueprint $table) {
             $table->id();
             $table->date('fecha_inicio');
-            $table->date('fecha_final');
-            $table->decimal("nota",4,2);
+            $table->date('fecha_final')->nullable();
+            $table->decimal("nota",4,2)->nullable();
             $table->foreignId('usuairo_id')->nullable(false)->constrained('usuarios');
             $table->foreignId('empresa_id')->nullable(false)->constrained('empresas');
         });
