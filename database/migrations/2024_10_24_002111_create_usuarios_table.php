@@ -25,8 +25,10 @@ return new class extends Migration
             $table->foreignId("rol_id")->constrained('roles');
             $table->foreignId('direccion_id')->nullable(true)->default(null)->constrained('direcciones');
             $table->foreignId('contacto_id')->nullable()->constrained('contactos');
-            $table->datetime('created_at')->useCurrent();
             $table->datetime('ultimo_inicio')->nullable()->default(null);
+            $table->timestamps();
+            $table->softDeletes();
+
         });
     }
 

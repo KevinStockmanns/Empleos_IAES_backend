@@ -12,8 +12,8 @@ class HorarioRespuestaDTO
 
     public function __construct(Horario $horario)
     {
-        $this->desde = $horario->desde;
-        $this->hasta = $horario->hasta;
+        $this->desde = $horario->desde->format('H:i');
+        $this->hasta = $horario->hasta->format('H:i');
         $this->dias = $this->convertirDiasAArray($horario->dias);
         ;
     }

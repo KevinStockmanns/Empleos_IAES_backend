@@ -4,12 +4,13 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Empresa extends Model
 {
-    use HasFactory;
+    use HasFactory, SoftDeletes;
     public $table = 'empresas';
-    public $timestamps = false;
+    public $timestamps = true;
 
     protected $guarded = ['id'];
 

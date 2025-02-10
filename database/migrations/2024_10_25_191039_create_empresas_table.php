@@ -19,6 +19,8 @@ return new class extends Migration
             $table->string('imagen')->nullable();
             $table->foreignId('usuario_id')->nullable()->constrained('usuarios');
             $table->foreignId('direccion_id')->nullable()->constrained('direcciones');
+            $table->timestamps();
+            $table->softDeletes();
         });
     }
 

@@ -6,6 +6,7 @@ use App\DTO\ExperienciaLaboral\ExperienciaLaboralRespuestaDTO;
 use App\DTO\Horario\HorarioRespuestaDTO;
 use App\DTO\Pasantia\PasantiaRespuestaDTO;
 use App\DTO\Ubicacion\UbicacionRespuestaDTO;
+use App\DTO\Usuario\UsuarioRespuestaDTO;
 use App\Models\Empresa;
 
 class EmpresaDetalleDTO{
@@ -25,6 +26,7 @@ class EmpresaDetalleDTO{
         $direccion = $empresa->direccion;
         $horarios = $empresa->horarios;
         $pasantias = $empresa->pasantias;
+        $usuario = $empresa->usuario;
 
         $this->id = $empresa->id;
         $this->nombre = $empresa->nombre;
@@ -44,5 +46,6 @@ class EmpresaDetalleDTO{
         $this->experienciasLaborales = $empresa->experienciasLaborales->map(function($exp){
             return new ExperienciaLaboralRespuestaDTO($exp);
         });
+        $this->usuario = $usuario ? new UsuarioRespuestaDTO($usuario) : null;
     }
 }

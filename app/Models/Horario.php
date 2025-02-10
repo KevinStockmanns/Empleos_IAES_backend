@@ -18,4 +18,10 @@ class Horario extends Model
     public function empresas(){
         return $this->belongsToMany(Empresa::class,"empresa_horarios", "horario_id", "empresa_id");
     }
+
+
+    protected $casts = [
+        'desde' => 'datetime:H:i', // Castea TIME a formato HH:mm
+        'hasta' => 'datetime:H:i',
+    ];
 }

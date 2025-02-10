@@ -3,16 +3,17 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
 use Tymon\JWTAuth\Contracts\JWTSubject;
 
 class Usuario extends Authenticatable implements JWTSubject
 {
-    use HasFactory;
+    use HasFactory, SoftDeletes;
 
     protected $table = 'usuarios';
-    public $timestamps = false;
+    public $timestamps = true;
 
     // protected $password = 'clave';
 
