@@ -29,6 +29,7 @@ class UbicacionRequest extends FormRequest
             'ubicacion.direccion' => 'required|string|max:255',
             'ubicacion.numero' => 'numeric',
             'ubicacion.piso' => 'numeric',
+            'ubicacion.accion'=> 'nullable|in:AGREGAR,ELIMINAR,ACTUALIZAR'
         ];
     }
 

@@ -7,27 +7,39 @@ use App\Models\Pais;
 use App\Models\Provincia;
 
 class UbicacionService{
-    public function registrarOrBuscar($data){
-        $pais = Pais::createOrFirst([
-            'nombre'=>$data['pais'],
-        ]);
-        $provincia = Provincia::createOrFirst([
-            'nombre'=> $data['provincia'],
-            "pais_id"=> $pais->id,
-        ]);
-        $localidad = Localidad::createOrFirst([
-            "nombre"=> $data['localidad'],
-            'codigo_postal' => $data['codigo_postal'] ?? null, 
-            "provincia_id"=>$provincia->id
-            
-        ]);
-        $direccion = Direccion::createOrFirst([
-            'barrio'=> $data['barrio'],
-            'calle'=>$data['direccion'],
-            'numero'=> isset($data['numero']) ? $data['numero'] : null,
-            'piso'=> isset($data['piso']) ? $data['piso'] : null,
-            'localidad_id'=> $localidad->id,
-        ]);
+    public function registrarOrBuscar($data) {
+        $pais = Pais::updateOrCreate(
+            ['nombre' => $data['pais']]
+        );
+
+        $provincia = Provincia::updateOrCreate(
+            [
+                'pais_id' => $pais->id,
+                'nombre' => $data['provincia']
+            ]
+        );
+
+        $localidad = Localidad::updateOrCreate(
+            [
+                'provincia_id' => $provincia->id,
+                'nombre' => $data['localidad']
+            ],
+            [
+                'codigo_postal' => $data['codigo_postal'] ?? null
+            ]
+        );
+
+        $direccion = Direccion::updateOrCreate(
+            [
+                'localidad_id' => $localidad->id,
+                'calle' => $data['direccion']
+            ],
+            [
+                'barrio' => $data['barrio'],
+                'numero' => $data['numero'] ?? null,
+                'piso' => $data['piso'] ?? null
+            ]
+        );
 
         return $direccion;
     }

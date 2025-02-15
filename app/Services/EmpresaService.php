@@ -2,6 +2,7 @@
 namespace App\Services;
 
 use App\Exceptions\CustomException;
+use App\Http\Requests\Empresa\EmpresaCRUDRequest;
 use App\Models\Direccion;
 use App\Models\Empresa;
 use App\Models\Horario;
@@ -81,5 +82,50 @@ class EmpresaService
         $empresa->direccion_id = $direccion->id;
         $empresa->save();
         return $direccion;
+    }
+
+
+    public function actualizarEmpresa($data): Empresa{
+        $empresa = Empresa::where('id', $data['id'])
+            ->with('direccion', 'horarios')
+            ->firstOrFail();
+
+        $empresa->update([
+            'nombre' => $data['nombre'],
+            'referente' => $data['referente'],
+            'cuil_cuit' => $data['cuil_cuit'],
+            'usuario_id' => $data['idUsuario'] ?? null,
+
+        ]);
+
+        if(isset($data['ubicacion'])){
+            $direcDto = $data['ubicacion'];
+            $direccion = $empresa->direccion;
+            if(isset($direcDto['accion']) && $direcDto['accion'] == 'ELIMINAR'){
+                $empresa->direccion_id = null;
+                $direccion->delete();
+            }else{
+                $direccion = $this->ubicacionService->registrarOrBuscar($data['ubicacion']);
+                $empresa->direccion_id = $direccion->id;
+            }
+            $empresa->save();
+        }
+
+        if(isset($data['horarios'])){
+            $horariosDto = $data['horarios'];
+            $horarios = [];
+
+            foreach ($horariosDto as $horDto) {
+                $horarios[] = $this->horarioService->buscarORegistrar($horDto);
+            }
+
+
+            $horariosIDs = collect($horarios)->pluck('id');
+
+            $empresa->horarios()->sync($horariosIDs);
+        }
+
+
+        return $empresa;
     }
 }

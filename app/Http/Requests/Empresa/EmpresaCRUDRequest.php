@@ -5,8 +5,9 @@ namespace App\Http\Requests\Empresa;
 use App\Http\Requests\Horario\HorarioRequest;
 use App\Http\Requests\UbicacionRequest;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
-class EmpresaRegistrarRequest extends FormRequest
+class EmpresaCRUDRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -23,11 +24,20 @@ class EmpresaRegistrarRequest extends FormRequest
      */
     public function rules(): array
     {
+        // $id ? Rule::unique('pesajes', 'nro_remito')->ignore($id) : 'unique:pesajes,nro_remito',
+        $id = isset($this->id) ? $this->input('id') : null;
         $rules = [
+            'id'=> 'nullable|exists:empresas,id',
             'nombre' => 'required|max:100|min:3|regex:/^[a-zA-Z0-9ñÑáéíóúÁÉÍÓÚ\s]+$/',
             'referente' => 'nullable|min:3|max:50|regex:/^[a-zA-ZñÑáéíóúÁÉÍÓÚ\s]+$/',
-            'cuil_cuit' => 'required|regex:/^\d{2}\-\d{7,10}\-\d$/|unique:empresas,cuil_cuit',
-            'idUsuairo' => 'nullable|numeric'
+            'cuil_cuit' => [
+                'required',
+                'regex:/^\d{2}\-\d{7,10}\-\d$/',
+                $id
+                    ? Rule::unique('empresas', 'cuil_cuit')->ignore($id)
+                    : 'unique:empresas,cuil_cuit'
+            ],
+            'idUsuairo' => 'nullable|numeric',
         ];
         if ($this->has('ubicacion')) {
             $ubicacion = new UbicacionRequest();
@@ -49,6 +59,7 @@ class EmpresaRegistrarRequest extends FormRequest
         $horario = new HorarioRequest();
         return array_merge(
             [
+                'id.exists'=>'No existe una empresa con el id enviado.',
                 'nombre.required' => 'el nombre es requerido',
                 'nombre.max' => 'el nombre debe tener hasta :max caracteres',
                 'nombre.min' => 'el nombre debe tener al menos :min caracteres',

@@ -53,6 +53,9 @@ Route::prefix('/v1/empresas')->group(function(){
     Route::middleware('jwt')->group(function(){
         Route::get('', [EmpresaController::class,'listarEmpresas']);
         Route::get('/{id}', [EmpresaController::class,'getEmpresa']);
+
+
+        Route::delete('/{idEmpresa}', [EmpresaController::class, 'deleteEmpresa']);
         
     });
     Route::post('/', [EmpresaController::class, 'postEmpresa']);

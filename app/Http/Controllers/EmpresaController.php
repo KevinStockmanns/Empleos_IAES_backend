@@ -7,9 +7,10 @@ use App\DTO\Empresa\EmpresaListadoDTO;
 use App\DTO\Empresa\EmpresaRespuestaDTO;
 use App\DTO\Ubicacion\UbicacionRespuestaDTO;
 use App\Exceptions\CustomException;
-use App\Http\Requests\Empresa\EmpresaRegistrarRequest;
+use App\Http\Requests\Empresa\EmpresaCRUDRequest;
 use App\Http\Requests\UbicacionRequest;
 use App\Models\Empresa;
+use App\Rules\OwnerOrAdmin;
 use App\Services\EmpresaService;
 use App\Services\UbicacionService;
 use Illuminate\Http\Request;
@@ -21,9 +22,13 @@ class EmpresaController extends Controller{
         $this->empresaService=$empresaService;
         $this->ubicacionService= $ubicacionService;
     }
-    public function postEmpresa(EmpresaRegistrarRequest $req){
+    public function postEmpresa(EmpresaCRUDRequest $req){
         $data = $req->validated();
-        $empresa = $this->empresaService->registrarEmpresa($data);
+        if(isset($data['id'])){
+            $empresa = $this->empresaService->actualizarEmpresa($data);
+        }else{
+            $empresa = $this->empresaService->registrarEmpresa($data);
+        }
 
         return response()->json(new EmpresaRespuestaDTO($empresa));
     }
@@ -36,8 +41,8 @@ class EmpresaController extends Controller{
     }
 
     public function listarEmpresas(Request $req){
-        $page = $req->input('page', 0);
-        $size = $req->input('size', 15);
+        $page = $req->input('page', 1);
+        $size = $req->input('size', 20);
 
         $query = Empresa::query();
 
@@ -61,5 +66,23 @@ class EmpresaController extends Controller{
         return response()->json(new EmpresaDetalleDTO($empresa));
     }
 
+
+
+
+    public function deleteEmpresa(Request $req, $idEmpresa){
+        $validated = $req->validate([
+            'idUsuario' => ['required', new OwnerOrAdmin()],
+        ],[
+            'idUsuario.required'=>'El id del usuario es requerido.',
+        ]);
+
+        $empresa = Empresa::find($idEmpresa);
+        if($empresa){
+            $empresa->delete();
+            return response()->json('Empresa eliminada con éxito.');
+        }
+
+        return response()->json('No se encontro la emppresa en la base de datos.');
+    }
 
 }
