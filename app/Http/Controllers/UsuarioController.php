@@ -13,6 +13,7 @@ use App\DTO\Usuario\UsuarioDetalleDTO;
 use App\DTO\Usuario\UsuarioListadoDTO;
 use App\DTO\Usuario\UsuarioRespuestaDTO;
 use App\Enums\AccionCrudEnum;
+use App\Enums\CategoriaLicenciaConducirEnum;
 use App\Enums\RolEnum;
 use App\Exceptions\CustomException;
 use App\Http\Requests\Contacto\ContactoRequest;
@@ -35,6 +36,7 @@ use App\Services\UsuarioService;
 use Auth;
 use Cache;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 use Intervention\Image\Image;
 
 class UsuarioController extends Controller
@@ -106,19 +108,61 @@ class UsuarioController extends Controller
                   ->orWhere('id', $nombre);
             });
         }
+        if ($req->has('edad')) {
+            $edad = $req->get('edad');
+            $rangos = explode('-', $edad);
+            $hoy = now(); // Fecha actual
         
-        if($req->has('rol')){
-            $rol = $req->get('rol', RolEnum::ALUMNO->value);
-
-            if (!in_array($rol, array_map(fn($role) => $role->value, RolEnum::cases()))) {
-                $validRoles = implode(', ', array_map(fn($role) => $role->value, RolEnum::cases()));
-                throw new CustomException('El rol enviado no es válido. Los roles válidos son: ' . $validRoles, 400);
+            if (count($rangos) == 2) {
+                $desde = trim($rangos[0]) !== '' ? intval($rangos[0]) : null;
+                $hasta = trim($rangos[1]) !== '' ? intval($rangos[1]) : null;
+        
+                if ($desde !== null && $hasta !== null) {
+                    // Filtrar entre ambas edades
+                    $query->whereRaw("TIMESTAMPDIFF(YEAR, fecha_nacimiento, ?) BETWEEN ? AND ?", [$hoy, $desde, $hasta]);
+                } elseif ($desde !== null) {
+                    // Filtrar desde una edad específica
+                    $query->whereRaw("TIMESTAMPDIFF(YEAR, fecha_nacimiento, ?) >= ?", [$hoy, $desde]);
+                } elseif ($hasta !== null) {
+                    // Filtrar hasta una edad específica
+                    $query->whereRaw("TIMESTAMPDIFF(YEAR, fecha_nacimiento, ?) <= ?", [$hoy, $hasta]);
+                }
+            } else {
+                // Caso en que solo venga una edad sin guión
+                $edadExacta = intval($edad);
+                $query->whereRaw("TIMESTAMPDIFF(YEAR, fecha_nacimiento, ?) = ?", [$hoy, $edadExacta]);
             }
-
-            $query->whereHas('rol', function($q) use ($rol) {
-                $q->where('nombre', $rol);
+        }
+        if($req->has('correo')){
+            $correo = $req->get('correo');
+            $query->where('correo', 'like', "%$correo%");
+        }
+        if ($req->has('estado')) {
+            $estado = explode(',', $req->get('estado')); 
+            
+            if (in_array('BAJA', $estado)) {
+                $query->onlyTrashed(); 
+            } else {
+                $query->whereIn('estado', $estado); 
+            }
+        }
+        
+        if ($req->has('rol')) {
+            $roles = explode(',', $req->get('rol')); 
+        
+            $validRoles = array_map(fn($role) => $role->value, RolEnum::cases());
+            $invalidRoles = array_diff($roles, $validRoles);
+        
+            if (!empty($invalidRoles)) {
+                $validRolesList = implode(', ', $validRoles);
+                throw new CustomException('Los roles enviados no son válidos. Los roles válidos son: ' . $validRolesList, 400);
+            }
+        
+            $query->whereHas('rol', function($q) use ($roles) {
+                $q->whereIn('nombre', $roles); 
             });
         }
+        
         // dd($query->get());
 
 
@@ -267,5 +311,29 @@ class UsuarioController extends Controller
                 return new ExperienciaLaboralRespuestaDTO($exp);
             })
         ]);
+    }
+
+
+
+    public function postLicenciaConducir(Request $req){
+        $idUser = $req->route('id');
+        $data = $req->validate([
+            'categoria'=> [
+                Rule::in(array_merge(array_column(CategoriaLicenciaConducirEnum::cases(), 'value'), ['']))
+            ],
+            'vehiculoPropio'=> 'nullable|boolean',
+            'id'=>'nullable|exists:licencias_conducir,id'
+        ],[
+            'categoria.required'=>'La categoría es requerida.',
+            'categoria.in'=>"La categoría no es valida.",
+            'vehiculoPropio.boolean'=>'El dato de vehículo propio debe ser booleano.',
+            'id.exists'=>'No se encontro la licencia en la base de datos.'
+        ]);
+
+
+        $lic = $this->usuarioService->cargarLicenciaConducir($data, $idUser);
+
+
+        return response()->json($lic);
     }
 }

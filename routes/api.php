@@ -1,5 +1,7 @@
 <?php
 
+use App\Enums\CategoriaLicenciaConducirEnum;
+use App\Enums\DisponibilidadEnum;
 use App\Http\Controllers\EmpresaController;
 use App\Http\Controllers\HabilidadController;
 use App\Http\Controllers\UsuarioController;
@@ -43,6 +45,8 @@ Route::prefix('/v1/usuarios')->group(function() {
 
         Route::post('{id}/titulo', [UsuarioController::class, 'postEducacion']);
         Route::post('/{id}/expLaboral', [UsuarioController::class, 'postExperienciaLaboral']);
+        Route::post('/{id}/licenciaConducir', [UsuarioController::class, 'postLicenciaConducir'])
+            ->middleware('user.access');
     });
     Route::get('/imagen/{image}', [UsuarioController::class, 'getFotoPerfil']);
     Route::get('/cv/{cv}', [UsuarioController::class, 'getCV']);
@@ -67,5 +71,21 @@ Route::prefix('/v1/empresas')->group(function(){
 Route::prefix('/v1/habilidades')->group(function(){
     Route::middleware('jwt')->group(function(){
         Route::get('/', [HabilidadController::class, 'getHabilidades']);
+    });
+});
+
+Route::prefix('/v1/disponiblidad')->group(function(){
+    Route::middleware('jwt')->group(function(){
+        Route::get('/', [HabilidadController::class, function(){
+            return response()->json(array_column(DisponibilidadEnum::cases(), 'value'));
+        }]);
+    });
+});
+
+Route::prefix('/v1/licenciaConducir/categorias')->group(function(){
+    Route::middleware('jwt')->group(function(){
+        Route::get('/', function(){
+            return response()->json(array_column(CategoriaLicenciaConducirEnum::cases(), 'value'));
+        });
     });
 });

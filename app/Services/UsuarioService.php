@@ -13,6 +13,7 @@ use App\Http\Requests\Usuario\UsuarioCVRequest;
 use App\Http\Requests\Usuario\UsuarioImagenRequest;
 use App\Models\Empresa;
 use App\Models\ExperienciaLaboral;
+use App\Models\LicenciaConducir;
 use App\Models\PerfilProfesional;
 use App\Models\Rol;
 use App\Models\Titulo;
@@ -107,6 +108,17 @@ class UsuarioService
         if (!$this->verifyPassword($clave, $usuario->clave)) {
             throw new CustomException('Credenciales inválidas', 403);
         }
+        if($usuario->estado == EstadoUsuarioEnum::BLOQUEADO->value){
+            throw new CustomException('La cuenta se encuentra bloqueada. Por favor comunicate con administración.', 400);
+        }
+
+        if($usuario->estado == EstadoUsuarioEnum::ALTA->value){
+            $usuario->estado = EstadoUsuarioEnum::PRIVADO->value;
+        }
+        
+        $usuario->ultimo_inicio = now();
+        $usuario->save();
+
 
         $claims = [
             'rol' => $usuario->rol->nombre,
@@ -358,6 +370,7 @@ class UsuarioService
                     $expLab->nombre = $empresa->nombre;
                 }
                 $expLab->save();
+                logger('update exp: ' . $expLab);
             }else if($expDto['accion'] == AccionCrudEnum::ELIMINAR->value){
                 $exp = $experienciasLaborales->firstWhere('id', $expDto['id']);
                 if(!$exp){
@@ -373,6 +386,33 @@ class UsuarioService
         return $experienciasLaborales;
     }
 
+
+    public function cargarLicenciaConducir($data, $idUser): LicenciaConducir|null{
+        $lic = null;
+        if(isset($data['id'])){
+            $lic = LicenciaConducir::find($data['id']);
+
+            if(isset($data['categoria']) && $data['categoria']){
+                $lic->update([
+                    'categoria' => $data['categoria'],
+                    'vehiculo_propio' => $data['vehiculoPropio'] ?? false,
+                ]);
+            }else{
+                $lic->delete();
+            }
+        }else{
+            if(isset($data['categoria']) && $data['categoria']){
+                $lic = LicenciaConducir::create([
+                    'categoria' => $data['categoria'],
+                    'vehiculo_propio' => $data['vehiculoPropio'] ?? false,
+                    'usuario_id' => $idUser, 
+                ]);
+            }
+        }
+
+
+        return $lic;
+    }
 
 
     public function encryptPassword($password)

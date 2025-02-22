@@ -42,7 +42,7 @@ class Usuario extends Authenticatable implements JWTSubject
         return $this->hasOne(PerfilProfesional::class);
     }
     public function experienciasLaborales(){
-        return $this->hasMany(ExperienciaLaboral::class);
+        return $this->hasMany(ExperienciaLaboral::class, 'usuario_id', 'id');
     }
 
     

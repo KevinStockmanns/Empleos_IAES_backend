@@ -9,6 +9,10 @@ class LicenciaConducir extends Model
 {
     use HasFactory;
 
+    public $guarded = ['id'];
+    public $table = 'licencias_conducir';
+    public $timestamps = false;
+
     public function usuario(){
         return $this->belongsTo(Usuario::class);
     }

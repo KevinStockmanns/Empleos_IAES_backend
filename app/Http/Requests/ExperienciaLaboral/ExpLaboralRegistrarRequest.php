@@ -29,12 +29,12 @@ class ExpLaboralRegistrarRequest extends FormRequest
             'experienciaLaboral'=>'required|array|min:1',
             'experienciaLaboral.*.puesto'=>'string|min:3|max:50|regex:/^[a-zA-Z0-9ñÑáéíóúÁÉÍÓÚ\s]+$/',
             'experienciaLaboral.*.empresa'=>'string|min:3|max:50|regex:/^[a-zA-Z0-9ñÑáéíóúÁÉÍÓÚ\s]+$/',
-            'experienciaLaboral.*.idEmpresa'=>'integer',
-            'experienciaLaboral.*.descripcion'=>'string|min:15|max:500|regex:/^.{15,500}$/s/',
+            'experienciaLaboral.*.idEmpresa'=>'nullable|integer',
+            'experienciaLaboral.*.descripcion' => 'nullable|string|min:15|max:500',
             'experienciaLaboral.*.fechaInicio'=>'date|before:today',
-            'experienciaLaboral.*.fechaTerminacion'=>'date|before:today',
+            'experienciaLaboral.*.fechaTerminacion'=>'nullable|date|before:today',
             'experienciaLaboral.*.accion'=>['required', Rule::in(array_column(AccionCrudEnum::cases(), 'value'))],
-            'experienciaLaboral.*.id'=>['integer'],
+            'experienciaLaboral.*.id'=>['nullable', 'integer'],
             
         ];
 

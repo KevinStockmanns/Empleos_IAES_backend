@@ -4,6 +4,7 @@ namespace App\DTO\ExperienciaLaboral;
 use App\Models\ExperienciaLaboral;
 
 class ExperienciaLaboralRespuestaDTO{
+    public $id;
     public $puesto;
     public $empresa;
     public $fechaInicio;
@@ -13,6 +14,7 @@ class ExperienciaLaboralRespuestaDTO{
 
     public function __construct(ExperienciaLaboral $exp){
         $empresa = $exp->empresa;
+        $this->id = $exp->id;
         $this->puesto = $exp->puesto;
         $this->empresa = $exp->empresa ?? $empresa->nombre;
         $this->fechaInicio = $exp->fecha_inicio;

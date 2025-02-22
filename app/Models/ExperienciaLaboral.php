@@ -11,6 +11,10 @@ class ExperienciaLaboral extends Model
     public $table = 'experiencias_laborales';
     public $timestamps = false;
     public $guarded=['id'];
+    protected $casts = [
+        'fecha_inicio' => 'datetime',
+        'fecha_terminacion' => 'datetime',
+    ];
 
     public function usuario(){
         return $this->belongsTo(Usuario::class);

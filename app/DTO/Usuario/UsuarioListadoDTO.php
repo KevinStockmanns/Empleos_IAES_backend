@@ -11,6 +11,7 @@ class UsuarioListadoDTO{
     public $dni;
     public $fechaNacimiento;
     public $estado;
+    public $rol;
     public $estadoPerfil;
     public $disponibilidad;
 
@@ -25,6 +26,7 @@ class UsuarioListadoDTO{
         $this->dni = $usuario->dni;
         $this->fechaNacimiento = $usuario->fecha_nacimiento;
         $this->estado = $usuario->estado;
+        $this->rol = $usuario->rol->nombre;
         $this->estadoPerfil = $perfilCompletoDto->completo ?? 0;
 
         $perfilProf = $usuario->perfilProfesional;
