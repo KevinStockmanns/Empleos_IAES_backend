@@ -2,7 +2,9 @@
 
 namespace App\Http\Requests\Usuario;
 
+use App\Enums\EstadoCivilEnum;
 use App\Enums\EstadoUsuarioEnum;
+use App\Enums\GeneroEnum;
 use App\Enums\RolEnum;
 use App\Http\Requests\UbicacionRequest;
 use Illuminate\Foundation\Http\FormRequest;
@@ -44,7 +46,9 @@ class RegistrarUsuarioRequest extends FormRequest
             'fechaNacimiento' => 'before_or_equal:' . now()->subYears(18)->toDateString(),
             'clave' => 'required|min:8|max:20|regex:/^[a-zA-ZñÑ\-_0-9]+$/',
             'dni' => 'required|regex:/^[0-9]{7,12}$/|unique:usuarios,dni',
-            'rol'=> ['required', Rule::in([RolEnum::ALUMNO->value, RolEnum::EGRESADO->value])]
+            'rol'=> ['required', Rule::in([RolEnum::ALUMNO->value, RolEnum::EGRESADO->value])],
+            'estado_civil'=> ['required', Rule::in(array_column(EstadoCivilEnum::cases(), 'value'))],
+            'genero'=>['required', Rule::in(array_column(GeneroEnum::cases(), 'value'))]
         ];
 
         if($usuario!=null && $usuario->isAdmin()){
@@ -102,6 +106,10 @@ class RegistrarUsuarioRequest extends FormRequest
                 'estado.in' => 'El estado debe ser uno de los siguientes valores: ' . implode(', ', array_column(EstadoUsuarioEnum::cases(), 'value')),
                 'rol.required'=>'El rol es requerido',
                 'rol.in' => $rolMessage,
+                'estado_civil.required'=> 'El estado civil es requerido',
+                'estado_civil.in'=>'Las opciones válidas para el estado civil son: '. implode(', ', array_column(EstadoCivilEnum::cases(), 'value')),
+                'genero.required'=>'El género del usuario es requerido.',
+                'genero.in'=>'Las opciones válidas para el género son: ' . implode(', ', array_column(GeneroEnum::cases(), 'value')),
             ],
             $ubicacionRequest->messages(),
         );

@@ -162,6 +162,10 @@ class UsuarioController extends Controller
                 $q->whereIn('nombre', $roles); 
             });
         }
+        // Excluir siempre a los usuarios DEV
+        $query->whereHas('rol', function ($q) {
+            $q->where('nombre', '!=', 'DEV');
+        });
         
         // dd($query->get());
 

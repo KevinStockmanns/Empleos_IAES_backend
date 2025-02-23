@@ -2,7 +2,9 @@
 
 namespace Database\Seeders;
 
+use App\Enums\EstadoCivilEnum;
 use App\Enums\EstadoUsuarioEnum;
+use App\Enums\GeneroEnum;
 use App\Enums\RolEnum;
 use App\Models\Rol;
 use App\Models\Usuario;
@@ -25,10 +27,13 @@ class UsuarioSeed extends Seeder
             Usuario::create([
                 'nombre'=>'SysAdmin',
                 'apellido'=>'SysAdmin',
+                'fecha_nacimiento'=>'2002-03-27',
                 'correo'=>'admin@gmail.com',
                 'clave'=>Hash::make('adminadmin'),
                 'rol_id'=> $rol->id,
-                'estado'=> EstadoUsuarioEnum::PRIVADO->value
+                'estado'=> EstadoUsuarioEnum::PRIVADO->value,
+                'estado_civil'=> EstadoCivilEnum::SOLTERO->value,
+                'genero'=> GeneroEnum::MASCULINO->value
             ]);
         }
     }

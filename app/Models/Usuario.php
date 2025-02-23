@@ -18,7 +18,7 @@ class Usuario extends Authenticatable implements JWTSubject
     // protected $password = 'clave';
 
 
-    protected $fillable = ['nombre', 'apellido', 'fecha_nacimiento', 'dni', 'correo', 'clave','estado', 'direccion_id'];
+    public $guarded = ['id'];
 
 
     public function isAdmin(): bool{
@@ -54,6 +54,9 @@ class Usuario extends Authenticatable implements JWTSubject
     }
     public function contacto(){
         return $this->belongsTo(Contact::class);
+    }
+    public function empresas(){
+        return $this->hasMany(Empresa::class, 'usuario_id', 'id');
     }
 
     public function tituloDetalles(){

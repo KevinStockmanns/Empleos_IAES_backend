@@ -1,6 +1,7 @@
 <?php
 namespace App\DTO\Usuario;
 
+use App\DTO\Empresa\EmpresaRespuestaDTO;
 use App\Models\Usuario;
 
 class UsuarioListadoDTO{
@@ -14,6 +15,7 @@ class UsuarioListadoDTO{
     public $rol;
     public $estadoPerfil;
     public $disponibilidad;
+    public $empresaAsociada;
 
     public function __construct(Usuario $usuario, $perfilCompletoDto = null) {
         // Cargamos la relación perfilProfesional si no está cargada

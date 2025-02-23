@@ -26,6 +26,8 @@ return new class extends Migration
             $table->foreignId('direccion_id')->nullable(true)->default(null)->constrained('direcciones');
             $table->foreignId('contacto_id')->nullable()->constrained('contactos');
             $table->datetime('ultimo_inicio')->nullable()->default(null);
+            $table->string('genero');
+            $table->string('estado_civil');
             $table->timestamps();
             $table->softDeletes();
 

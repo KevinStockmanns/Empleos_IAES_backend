@@ -71,6 +71,8 @@ class UsuarioService
                 ? Carbon::createFromFormat('Y-m-d', $data['fechaNacimiento'])
                 : null,
             'direccion_id' => $direccion->id ?? null,
+            'estado_civil'=>$data['estado_civil'],
+            'genero'=>$data['genero'],
         ]);
         $usuario->rol_id = $rol->id;
 
@@ -170,6 +172,12 @@ class UsuarioService
         }
         if (isset($data['dni'])) {
             $usuario->dni = $data['dni'];
+        }
+        if (isset($data['estado_civil'])) {
+            $usuario->estado_civil = $data['estado_civil'];
+        }
+        if (isset($data['genero'])) {
+            $usuario->genero = $data['genero'];
         }
         if (isset($data['rol'])) {
             $rol = Rol::firstOrCreate([

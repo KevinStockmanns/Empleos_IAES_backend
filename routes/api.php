@@ -2,6 +2,8 @@
 
 use App\Enums\CategoriaLicenciaConducirEnum;
 use App\Enums\DisponibilidadEnum;
+use App\Enums\EstadoCivilEnum;
+use App\Enums\GeneroEnum;
 use App\Http\Controllers\EmpresaController;
 use App\Http\Controllers\HabilidadController;
 use App\Http\Controllers\UsuarioController;
@@ -29,6 +31,16 @@ Route::prefix('/v1/usuarios')->group(function() {
     Route::middleware('jwt')->group(function () {
         Route::get("/", [UsuarioController::class, 'listarUsuarios']);
         Route::get("/roles", [UsuarioController::class, 'getRoles']);
+
+
+        Route::get('/generos', function(){
+            return response()->json(array_column(GeneroEnum::cases(), 'value'));
+        });
+        Route::get('/estado-civil', function(){
+            return response()->json(array_column(EstadoCivilEnum::cases(), 'value'));
+        });
+
+
         Route::get('/{id}/detalles', [UsuarioController::class, 'getDetalleUsuario']);
         Route::get('/{id}/completado', [UsuarioController::class, 'getPerfilCompletado']);
         Route::get("/{id}", [UsuarioController::class, 'obtenerUsuario']);
@@ -47,6 +59,9 @@ Route::prefix('/v1/usuarios')->group(function() {
         Route::post('/{id}/expLaboral', [UsuarioController::class, 'postExperienciaLaboral']);
         Route::post('/{id}/licenciaConducir', [UsuarioController::class, 'postLicenciaConducir'])
             ->middleware('user.access');
+
+
+        
     });
     Route::get('/imagen/{image}', [UsuarioController::class, 'getFotoPerfil']);
     Route::get('/cv/{cv}', [UsuarioController::class, 'getCV']);

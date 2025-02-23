@@ -37,7 +37,7 @@ class EmpresaCRUDRequest extends FormRequest
                     ? Rule::unique('empresas', 'cuil_cuit')->ignore($id)
                     : 'unique:empresas,cuil_cuit'
             ],
-            'idUsuairo' => 'nullable|numeric',
+            'idUsuario' => 'nullable|numeric',
         ];
         if ($this->has('ubicacion')) {
             $ubicacion = new UbicacionRequest();

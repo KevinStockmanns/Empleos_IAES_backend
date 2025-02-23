@@ -2,6 +2,8 @@
 namespace App\DTO\Usuario;
 
 use App\DTO\Contacto\ContactoRespuestaDTO;
+use App\DTO\Empresa\EmpresaDetalleDTO;
+use App\DTO\Empresa\EmpresaRespuestaDTO;
 use App\DTO\ExperienciaLaboral\ExperienciaLaboralRespuestaDTO;
 use App\DTO\Habilidad\HabilidadRespuestaDTO;
 use App\DTO\LicenciaConducir\LicenciaConducirRespuestaDTO;
@@ -16,6 +18,8 @@ class UsuarioDetalleDTO{
     public $apellido;
     public $correo;
     public $dni;
+    public $estadoCivil;
+    public $genero;
     public $fechaNacimiento;
     public $estado;
     public $rol;
@@ -28,6 +32,7 @@ class UsuarioDetalleDTO{
     public $educacion;
     public $experienciaLaboral;
     public $licenciaConducir;
+    public $empresasAsociadas;
     
 
     public function __construct(Usuario $usuario){
@@ -38,12 +43,15 @@ class UsuarioDetalleDTO{
         $habilidades = $usuario->habilidades;
         $expL = $usuario->experienciasLaborales;
         $lic = $usuario->licenciaConducir;
+        $empresas = $usuario->empresas;
 
         $this->id = $usuario->id ?? null;
         $this->correo = $usuario->correo ?? null;
         $this->nombre = $usuario->nombre ?? null;
         $this->apellido = $usuario->apellido ?? null;
         $this->dni = $usuario->dni ?? null;
+        $this->estadoCivil = $usuario->estado_civil ?? null;
+        $this->genero = $usuario->genero ?? null;
         $this->fechaNacimiento = $usuario->fecha_nacimiento ?? null;
         $this->estado = $usuario->estado ?? null;
         $this->rol = $usuario->rol->nombre ?? null;
@@ -67,6 +75,11 @@ class UsuarioDetalleDTO{
             })->toArray()
             : [];
         $this->licenciaConducir = $lic ? new LicenciaConducirRespuestaDTO($lic) : null;
+        $this->empresasAsociadas = $empresas 
+            ? $empresas->map(function($em){
+                return new EmpresaDetalleDTO($em);
+            }) 
+            : [];
 
     }
 }
