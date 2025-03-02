@@ -108,6 +108,12 @@ class UsuarioController extends Controller
                   ->orWhere('id', $nombre);
             });
         }
+        if($req->has('dni')){
+            $dni = $req->get('dni');
+            $query->where(function($q) use ($dni) {
+                $q->where('dni', 'like', "%$dni%");
+            });
+        }
         if ($req->has('edad')) {
             $edad = $req->get('edad');
             $rangos = explode('-', $edad);

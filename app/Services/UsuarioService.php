@@ -375,7 +375,7 @@ class UsuarioService
                 }
                 if(isset($expDto['idEmpresa'])){
                     $expLab->empresa_id = $empresa->id;
-                    $expLab->nombre = $empresa->nombre;
+                    $expLab->empresa = $empresa->nombre;
                 }
                 $expLab->save();
                 logger('update exp: ' . $expLab);

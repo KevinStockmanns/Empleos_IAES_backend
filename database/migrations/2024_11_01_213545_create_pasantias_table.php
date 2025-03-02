@@ -12,11 +12,14 @@ return new class extends Migration
     public function up(): void {
         Schema::create('pasantias', function (Blueprint $table) {
             $table->id();
-            $table->date('fecha_inicio');
+            $table->string('titulo', 40);
+            $table->date('fecha_inicio')->nullable();
             $table->date('fecha_final')->nullable();
-            $table->decimal("nota",4,2)->nullable();
-            $table->foreignId('usuairo_id')->nullable(false)->constrained('usuarios');
-            $table->foreignId('empresa_id')->nullable(false)->constrained('empresas');
+            // $table->foreignId('usuario_id')->nullable()->constrained('usuarios');
+            $table->foreignId('empresa_id')->nullable()->constrained('empresas');
+            // $table->string('empresa')->nullable();
+            $table->text('desc')->nullable();
+            $table->text('estado');
         });
     }
 

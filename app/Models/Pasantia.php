@@ -11,6 +11,7 @@ class Pasantia extends Model
 
     public $table = 'pasantias';
     public $timestamps = false;
+    public $guarded = ['id'];
 
     protected $casts = [
         'fecha_inicio' => 'date',
@@ -20,7 +21,7 @@ class Pasantia extends Model
     public function empresa(){
         return $this->belongsTo(Empresa::class);
     }
-    public function usuario(){
-        return $this->belongsTo(Usuario::class);
+    public function usuarios(){
+        return $this->belongsToMany(Usuario::class, 'pasantias_usuarios')->withPivot('nota');
     }
 }

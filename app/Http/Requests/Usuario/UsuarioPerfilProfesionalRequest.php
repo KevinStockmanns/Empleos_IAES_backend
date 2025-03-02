@@ -32,7 +32,7 @@ class UsuarioPerfilProfesionalRequest extends FormRequest
     {
         return [
             'perfilProfesional.cargo'=> 'required|min:3|max:40|regex:/^[a-zA-ZñÑáéíóúÁÉÍÓÚ\s\.]+$/',
-            'perfilProfesional.cartaPresentacion'=>'string|min:100|max:3000|regex:/^[a-zA-Z0-9ñÑáéíóúÁÉÍÓÚ.,;:\'"\s\-()!?\n]+$/',
+            'perfilProfesional.cartaPresentacion'=>'string|min:100|max:3000',
             'perfilProfesional.disponibilidad'=>[
                 'required',
                 Rule::in(array_column(DisponibilidadEnum::cases(), 'value'))

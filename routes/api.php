@@ -6,6 +6,7 @@ use App\Enums\EstadoCivilEnum;
 use App\Enums\GeneroEnum;
 use App\Http\Controllers\EmpresaController;
 use App\Http\Controllers\HabilidadController;
+use App\Http\Controllers\PasantiaController;
 use App\Http\Controllers\UsuarioController;
 use Illuminate\Support\Facades\Route;
 
@@ -81,6 +82,15 @@ Route::prefix('/v1/empresas')->group(function(){
     
 
     Route::post('/{id}/ubicacion', [EmpresaController::class, 'cambiarUbicacion']);
+});
+
+Route::prefix('/v1/pasantias')->group(function(){
+    Route::middleware('jwt')->group(function(){
+        Route::get('/', [PasantiaController::class, 'listarPasantias']);
+        Route::post('/', [PasantiaController::class, 'postPasantia']);
+        Route::get('/{id}', [PasantiaController::class, 'getPasantia'])
+            ->middleware('user.access');
+    });
 });
 
 Route::prefix('/v1/habilidades')->group(function(){

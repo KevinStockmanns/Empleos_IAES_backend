@@ -13,10 +13,10 @@ class ExperienciaLaboralRespuestaDTO{
     public $idEmpresa;
 
     public function __construct(ExperienciaLaboral $exp){
-        $empresa = $exp->empresa;
+        $empresa = $exp->empresaModel;
         $this->id = $exp->id;
         $this->puesto = $exp->puesto;
-        $this->empresa = $exp->empresa ?? $empresa->nombre;
+        $this->empresa = $empresa->nombre ?? $exp->empresa;
         $this->fechaInicio = $exp->fecha_inicio;
         $this->fechaTerminacion = $exp->fecha_terminacion;
         $this->descripcion = $exp->descripcion;

@@ -50,7 +50,7 @@ class Usuario extends Authenticatable implements JWTSubject
         return $this->belongsTo(Direccion::class);
     }
     public function pasantias(){
-        return $this->hasMany(Pasantia::class);
+        return $this->belongsToMany(Pasantia::class, 'pasantias_usuarios')->withPivot('nota');
     }
     public function contacto(){
         return $this->belongsTo(Contact::class);

@@ -16,19 +16,33 @@ class CheckUserAccess
      */
     public function handle(Request $request, Closure $next): Response
     {
-        $userId = $request->route('id');
-        $user = auth()->user();
-
-        if(!$userId){
-            throw new CustomException('El id del usuario es requerido.', 400);
-        }
-        if(!$user){
-            throw new CustomException('El usuario no está autenticado.', 400);
+        $authUser = auth()->user();
+        if(!$authUser){
+            throw new CustomException('El usuario no está autenticado.', 401);
         }
 
-        if($userId == $user->id || $user->isAdmin()){
+        if($authUser->isAdmin()){
             return $next($request);
         }
-        throw new CustomException('No tienes los permisos necesarios para continuar.', 400);
+
+        $id = $request->route('id');
+        $segment = $request->segment(3);
+
+        if($segment == 'usuarios'){
+            if($id == $authUser->id){
+                return $next($request);
+            }
+        }elseif('pasantias'){
+            if($authUser->pasantias()->where('id', $id)->exists()){
+                return $next($request);
+            }
+        }
+
+
+        logger($segment . " segment");
+
+        throw new CustomException('No tienes los permisos necesarios para continuar.', 403);
+
+
     }
 }
