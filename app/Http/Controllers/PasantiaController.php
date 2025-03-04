@@ -87,13 +87,24 @@ class PasantiaController extends Controller
                 ]
             ];
         });
-        logger($data['usuarios']);
-        logger($usuariosCollection);
 
         
         $pasantia->usuarios()->sync($usuariosCollection);
         
 
+    }
+    public function deletePasantia(Request $req){
+        $req->merge(['id'=> $req->route('id')]);
+        $data = $req->validate([
+            'id'=>'required|exists:pasantias,id'
+        ],[
+            'id.required'=>'El id de la pasantía es requerido.',
+            'id.exists'=>'No se encontro la pasantía en la base de datos.'
+        ]);
+
+        Pasantia::where('id',$data['id'])->first()->delete();
+
+        return response()->json('La pasantía se elimino con éxito');
     }
 
 
@@ -156,6 +167,24 @@ class PasantiaController extends Controller
             else{
                 $query->where('estado', $req->estado);
             }
+        }
+
+
+        if($req->has('usuario')){
+            $usuario = $req->get('usuario');
+            $query->whereHas('usuarios', function($subq) use ($usuario){
+                $subq->where('nombre', 'like', "%$usuario%")
+                    ->orWhere('apellido', 'like', "%$usuario%")
+                    ->orWhere('correo', 'like', "%$usuario%")
+                    ->orWhere('dni', 'like', "%$usuario%");
+            });
+        }
+        if($req->has('empresa')){
+            $empresa = $req->get('empresa');
+            $query->whereHas('empresa', function($subq) use ($empresa){
+                $subq->where('nombre', 'like', "%$empresa%")
+                    ->orWhere('cuil_cuit', 'like', "%$empresa%");
+            });
         }
 
 

@@ -3,6 +3,7 @@
 namespace App\Http;
 
 use App\Http\Middleware\CheckUserAccess;
+use App\Http\Middleware\OnlyAdmin;
 use Illuminate\Auth\Middleware\Authenticate;
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
 
@@ -68,5 +69,6 @@ class Kernel extends HttpKernel
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
         'user.access'=> CheckUserAccess::class,
+        'admin.access'=> OnlyAdmin::class,
     ];
 }

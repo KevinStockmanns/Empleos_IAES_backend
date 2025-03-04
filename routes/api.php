@@ -90,6 +90,8 @@ Route::prefix('/v1/pasantias')->group(function(){
         Route::post('/', [PasantiaController::class, 'postPasantia']);
         Route::get('/{id}', [PasantiaController::class, 'getPasantia'])
             ->middleware('user.access');
+        Route::delete('/{id}', [PasantiaController::class, 'deletePasantia'])
+            ->middleware('admin.access');
     });
 });
 
