@@ -33,6 +33,7 @@ class UsuarioDetalleDTO{
     public $experienciaLaboral;
     public $licenciaConducir;
     public $empresasAsociadas;
+    public $pasantias;
     
 
     public function __construct(Usuario $usuario){
@@ -44,6 +45,7 @@ class UsuarioDetalleDTO{
         $expL = $usuario->experienciasLaborales;
         $lic = $usuario->licenciaConducir;
         $empresas = $usuario->empresas;
+        $pasantias = $usuario->getPasantiasPublicas();
 
         $this->id = $usuario->id ?? null;
         $this->correo = $usuario->correo ?? null;
@@ -80,6 +82,21 @@ class UsuarioDetalleDTO{
                 return new EmpresaDetalleDTO($em);
             }) 
             : [];
-
+        $this->pasantias = $pasantias
+            ? $pasantias->map(function($pas){
+                return [
+                    'id'=>$pas->id,
+                    'titulo'=>$pas->titulo,
+                    'descripcion'=>$pas->desc,
+                    'fechaInicio'=>$pas->fecha_inicio,
+                    'fechaFinal'=>$pas->fecha_final,
+                    'empresa'=> [
+                        'nombre'=> $pas->empresa->nombre,
+                        'id'=> $pas->empresa->id,
+                    ],
+                    'nota'=>$pas->pivot->nota,
+                ];
+            })
+            : [];
     }
 }

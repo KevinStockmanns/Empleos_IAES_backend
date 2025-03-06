@@ -116,18 +116,16 @@ class PasantiaController extends Controller
 
         
 
-        
+        $authUser = auth()->user();
 
-        if($req->has('pendiente') && $req->pendiente){
-            $query->whereNull('fecha_inicio')
-                ->orWhereDoesntHave('usuarios');
-                // ->orWhereHas('usuarios', function($userQuery) {
-                //     $userQuery->whereNull('pasantias_usuarios.nota');
-                // });;
-        }else{
-            $query->whereNotNull('fecha_inicio')
-                ->whereHas('usuarios');
+        if(!$authUser->isAdmin()){
+            $query->whereHas('usuarios', function($userQuery) use ($authUser){
+                $userQuery->where('usuarios.id', $authUser->id)
+                    ->whereNotNull('pasantias_usuarios.nota');
+            });
         }
+
+        
 
 
         if ($req->has('fecha')) {
@@ -173,10 +171,12 @@ class PasantiaController extends Controller
         if($req->has('usuario')){
             $usuario = $req->get('usuario');
             $query->whereHas('usuarios', function($subq) use ($usuario){
-                $subq->where('nombre', 'like', "%$usuario%")
-                    ->orWhere('apellido', 'like', "%$usuario%")
-                    ->orWhere('correo', 'like', "%$usuario%")
-                    ->orWhere('dni', 'like', "%$usuario%");
+                $subq->where(function($q) use ($usuario) {
+                $q->where('nombre', 'like', "%$usuario%")
+                  ->orWhere('apellido', 'like', "%$usuario%")
+                  ->orWhere('correo', 'like', "%$usuario%")
+                  ->orWhere('dni', 'like', "%$usuario%");
+            });
             });
         }
         if($req->has('empresa')){
@@ -188,12 +188,23 @@ class PasantiaController extends Controller
         }
 
 
+        if($req->has('pendiente') && $req->pendiente){
+            $query->whereNull('fecha_inicio')
+                ->orWhereDoesntHave('usuarios');
+                // ->orWhereHas('usuarios', function($userQuery) {
+                //     $userQuery->whereNull('pasantias_usuarios.nota');
+                // });;
+        }else{
+            $query->whereNotNull('fecha_inicio')
+                ->whereHas('usuarios');
+        }
+
         $query->orderBy('id', 'desc');
 
 
         $pasantias = $query->paginate($size, ['*'],'page', $page);
-        $pasantias->getCollection()->transform(function ($pasantia) {
-            return new PasantiaListadoDTO($pasantia);
+        $pasantias->getCollection()->transform(function ($pasantia) use ($authUser) {
+            return new PasantiaListadoDTO($pasantia, $authUser->isAdmin() ? null : $authUser->id);
         });
         
         // Modificar la respuesta para usar PaginacionDTO

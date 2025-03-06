@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\PasantiaEstadoEnum;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -51,6 +52,10 @@ class Usuario extends Authenticatable implements JWTSubject
     }
     public function pasantias(){
         return $this->belongsToMany(Pasantia::class, 'pasantias_usuarios')->withPivot('nota');
+    }
+    public function getPasantiasPublicas(){
+        return $this->pasantias()->where('estado', PasantiaEstadoEnum::APROBADA->value)
+            ->whereNotNull('pasantias_usuarios.nota')->get();
     }
     public function contacto(){
         return $this->belongsTo(Contact::class);

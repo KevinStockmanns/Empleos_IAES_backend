@@ -11,8 +11,10 @@ class PasantiaListadoDTO{
     public $empresa;
     public $usuarios;
 
-    public function __construct(Pasantia $pasantia){
-        $usuarios = $pasantia->usuarios;
+    public function __construct(Pasantia $pasantia, $idUser = null){
+        $usuarios = $idUser
+            ? $pasantia->usuarios()->where('usuarios.id', $idUser)->get()
+            : $pasantia->usuarios;
         $empresa = $pasantia->empresa;
         $this->id = $pasantia->id;
         $this->titulo = $pasantia->titulo;

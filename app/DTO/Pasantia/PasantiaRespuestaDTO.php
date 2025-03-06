@@ -14,8 +14,8 @@ class PasantiaRespuestaDTO{
 
     public function __construct(Pasantia $pasantia, $withUsuario = true, $withEmpresa = true){
         $this->id = $pasantia->id;
-        $this->fechaInicio = $pasantia->fecha_inicio->format('d/m/Y');
-        $this->fechaFinal = $pasantia->fecha_final->format('d/m/Y');
+        $this->fechaInicio = $pasantia->fecha_inicio ? $pasantia->fecha_inicio->format('d/m/Y') : null;
+        $this->fechaFinal = $pasantia->fecha_final ? $pasantia->fecha_final->format('d/m/Y') : null;
         $this->nota = $pasantia->nota ? number_format($pasantia->nota, 2) : null;
 
 

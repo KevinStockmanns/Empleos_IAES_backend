@@ -46,6 +46,12 @@ class EmpresaController extends Controller{
 
         $query = Empresa::query();
 
+        if($req->has('nombre')){
+            $nombre = $req->get('nombre');
+            $query->where('nombre', 'like', "%$nombre%")
+                ->orWhere('cuil_cuit', 'like', "%$nombre%");
+        }
+
         $empresas = $query->paginate($size);
 
 
