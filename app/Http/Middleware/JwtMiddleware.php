@@ -3,6 +3,7 @@
 namespace App\Http\Middleware;
 
 use App\DTO\ErrorDTO;
+use App\Enums\EstadoUsuarioEnum;
 use Closure;
 use Tymon\JWTAuth\Facades\JWTAuth;
 use Tymon\JWTAuth\Exceptions\JWTException;
@@ -31,6 +32,16 @@ class JwtMiddleware
 
             if (!$user) {
                 return response()->json(new ErrorDTO('Token inválido'), 401);
+            }
+
+            // Verificar si el usuario ha sido bloqueado
+            if ($user->estado === EstadoUsuarioEnum::BLOQUEADO->value) {
+                return response()->json(new ErrorDTO('Tu cuenta ha sido suspendida. Por favor, comunícate con administración.'), 403);
+            }
+
+            // Verificar si el usuario ha sido eliminado (soft delete)
+            if ($user->trashed()) {
+                return response()->json(new ErrorDTO('Tu cuenta ha sido dada de baja. Por favor, comunícate con administración.'), 403);
             }
         } catch (JWTException $e) {
             if ($e instanceof TokenExpiredException) {

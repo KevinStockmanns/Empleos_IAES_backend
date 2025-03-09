@@ -33,7 +33,7 @@ class CheckUserAccess
                 return $next($request);
             }
         }elseif('pasantias'){
-            if($authUser->pasantias()->where('id', $id)->exists()){
+            if($authUser->pasantias()->where('pasantias.id', $id)->exists()){
                 return $next($request);
             }
         }

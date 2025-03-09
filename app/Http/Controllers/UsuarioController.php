@@ -14,6 +14,7 @@ use App\DTO\Usuario\UsuarioListadoDTO;
 use App\DTO\Usuario\UsuarioRespuestaDTO;
 use App\Enums\AccionCrudEnum;
 use App\Enums\CategoriaLicenciaConducirEnum;
+use App\Enums\EstadoUsuarioEnum;
 use App\Enums\RolEnum;
 use App\Exceptions\CustomException;
 use App\Http\Requests\Contacto\ContactoRequest;
@@ -86,7 +87,7 @@ class UsuarioController extends Controller
         $page = $req->get('page', 1);
         $size = $req->get('size', 15);
 
-        $query = Usuario::query();
+        $query = Usuario::query()->withTrashed();
 
         if (!is_numeric($page) || !is_numeric($size)) {
             throw new CustomException('Los parametros deben ser númericos', 400);
@@ -113,6 +114,26 @@ class UsuarioController extends Controller
             $query->where(function($q) use ($dni) {
                 $q->where('dni', 'like', "%$dni%");
             });
+        }
+        if($req->has('cargo')){
+            $cargo = $req->get('cargo');
+
+            $query->whereHas('experienciasLaborales', function($exp) use($cargo){
+                $exp->where('puesto', 'like', "%$cargo%");
+            })
+                ->orWhereHas('perfilProfesional', function($perfil) use($cargo){
+                    $perfil->where('cargo', 'like', "%$cargo%");
+                });
+        }
+        if($req->has('educacion')){
+            $educacion = $req->get('educacion');
+
+            $query->whereHas('tituloDetalles.titulo', function($tit) use($educacion){
+                $tit->where('nombre', 'like', "%$educacion%");
+            })
+                ->orWhereHas('habilidades', function($hab) use($educacion){
+                    $hab->where('nombre', 'like', "%$educacion%");
+                });
         }
         if ($req->has('edad')) {
             $edad = $req->get('edad');
@@ -146,11 +167,7 @@ class UsuarioController extends Controller
         if ($req->has('estado')) {
             $estado = explode(',', $req->get('estado')); 
             
-            if (in_array('BAJA', $estado)) {
-                $query->onlyTrashed(); 
-            } else {
-                $query->whereIn('estado', $estado); 
-            }
+            $query->whereIn('estado', $estado); 
         }
         
         if ($req->has('rol')) {
@@ -175,6 +192,19 @@ class UsuarioController extends Controller
         
         // dd($query->get());
 
+        $orden = $req->get('order', 'ASCENDENTE');
+        $orderBy = $req->get('orderBy', 'APELLIDO');
+
+        if($orderBy == 'NOMBRE'){
+            $orderBy = 'APELLIDO';
+        }
+
+        if ($orderBy == 'EDAD') {
+            $query->orderByRaw("TIMESTAMPDIFF(YEAR, fecha_nacimiento, CURDATE()) " . ($orden == 'ASCENDENTE' ? 'ASC' : 'DESC'));
+        } else {
+            $query->orderBy($orderBy, $orden == 'ASCENDENTE' ? 'asc' : 'desc');
+        }
+        
 
         $usuarios = $query->paginate($size, ['*'],'page', $page);
 
@@ -346,4 +376,46 @@ class UsuarioController extends Controller
 
         return response()->json($lic);
     }
+
+
+    public function postEstadoUsuario(Request $req, $id){
+        $data = $req->validate([
+            'accion'=>'required|in:BLOQUEAR,BAJA,ALTA',
+        ],[
+            'accion.required'=>'La acción es requerida.',
+            'accion.in'=>'La acción es solo acepta BLOQUEAR, ALTA o BAJA.',
+        ]);
+
+
+        if($id == auth()->user()->id){
+            throw new CustomException('No puedes cambiar el estado de tu cuenta desde tu cuenta.', 403);
+        }
+
+        $usuario = Usuario::withTrashed()->find($id);
+
+        
+        if($usuario){
+            if($data['accion'] == 'BLOQUEAR'){
+                $usuario->update([
+                    'estado'=> EstadoUsuarioEnum::BLOQUEADO->value,
+                    'deleted_at'=>null
+                ]);
+            }
+            if($data['accion'] == 'BAJA'){
+                $usuario->update([
+                    'estado'=> EstadoUsuarioEnum::BAJA->value,
+                    'deleted_at'=> now()
+                ]);
+            }
+            if($data['accion'] == 'ALTA'){
+                $usuario->update([
+                    'estado'=> EstadoUsuarioEnum::ALTA->value,
+                    'deleted_at'=>null
+                ]);
+            }
+        }
+
+        return response()->noContent();
+    }
+
 }

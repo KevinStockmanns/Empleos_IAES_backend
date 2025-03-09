@@ -60,6 +60,7 @@ Route::prefix('/v1/usuarios')->group(function() {
         Route::post('/{id}/expLaboral', [UsuarioController::class, 'postExperienciaLaboral']);
         Route::post('/{id}/licenciaConducir', [UsuarioController::class, 'postLicenciaConducir'])
             ->middleware('user.access');
+        Route::post('/{id}/estado', [UsuarioController::class, 'postEstadoUsuario'])->middleware('admin.access');
 
 
         
@@ -91,6 +92,8 @@ Route::prefix('/v1/pasantias')->group(function(){
         Route::get('/{id}', [PasantiaController::class, 'getPasantia'])
             ->middleware('user.access');
         Route::delete('/{id}', [PasantiaController::class, 'deletePasantia'])
+            ->middleware('admin.access');
+        Route::post('/{id}/responder', [PasantiaController::class, 'responderPasantia'])
             ->middleware('admin.access');
     });
 });

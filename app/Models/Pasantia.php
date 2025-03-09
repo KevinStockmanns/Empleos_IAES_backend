@@ -24,4 +24,14 @@ class Pasantia extends Model
     public function usuarios(){
         return $this->belongsToMany(Usuario::class, 'pasantias_usuarios')->withPivot('nota');
     }
+
+
+
+    public function isComplete(){
+        return ($this->empresa != null && 
+            $this->usuarios->count() > 0 && 
+            $this->usuarios->contains(fn($user) => $user->pivot->nota != null) && 
+            $this->fecha_inicio != null &&
+            $this->titulo != null);
+    }
 }

@@ -103,7 +103,7 @@ class UsuarioService
 
     public function login($username, $clave)
     {
-        $usuario = Usuario::where('correo', $username)->first();
+        $usuario = Usuario::withTrashed()->where('correo', $username)->first();
         if (!$usuario) {
             throw new CustomException('Credenciales inválidas', 403);
         }
@@ -111,7 +111,10 @@ class UsuarioService
             throw new CustomException('Credenciales inválidas', 403);
         }
         if($usuario->estado == EstadoUsuarioEnum::BLOQUEADO->value){
-            throw new CustomException('La cuenta se encuentra bloqueada. Por favor comunicate con administración.', 400);
+            throw new CustomException('Tu cuenta ha sido suspendida. Por favor comunícate con administración.', 403);
+        }
+        if($usuario->trashed()){
+            throw new CustomException('Tu cuenta ha sido dada de baja. Por favor comunícate con administración.', 403);
         }
 
         if($usuario->estado == EstadoUsuarioEnum::ALTA->value){

@@ -90,9 +90,40 @@ class PasantiaController extends Controller
 
         
         $pasantia->usuarios()->sync($usuariosCollection);
-        
-
     }
+
+
+    public function responderPasantia(Request $req, $id){
+        $data = $req->validate([
+            'accion'=>'required|in:APROBAR,RECHAZAR'
+        ],[
+            'accion.required'=>'La acción es requerida.',
+            'accion.in'=> 'Los valores validos para la acción son APROBAR y RECHAZAR.'
+        ]);
+
+        $pasantia = Pasantia::find($id);
+        if($pasantia){
+            if($data['accion'] == 'APROBAR'){
+                if(!$pasantia->isComplete()){
+                    throw new CustomException('No se puede aprobar la pasantía por que le faltan datos que cargar.' , 400);
+                }
+                $pasantia->update([
+                    'estado'=> PasantiaEstadoEnum::APROBADA->value,
+                ]);
+            }
+
+            if($data['accion'] == 'RECHAZAR'){
+                $pasantia->update([
+                    'estado'=> PasantiaEstadoEnum::RECHAZADA->value
+                ]);
+            }
+        }
+
+
+        return response()->noContent();
+    }
+
+
     public function deletePasantia(Request $req){
         $req->merge(['id'=> $req->route('id')]);
         $data = $req->validate([
@@ -190,12 +221,13 @@ class PasantiaController extends Controller
 
         if($req->has('pendiente') && $req->pendiente){
             $query->whereNull('fecha_inicio')
+                ->where('estado', PasantiaEstadoEnum::APROBADA->value)
                 ->orWhereDoesntHave('usuarios');
                 // ->orWhereHas('usuarios', function($userQuery) {
                 //     $userQuery->whereNull('pasantias_usuarios.nota');
                 // });;
         }else{
-            $query->whereNotNull('fecha_inicio')
+            $query
                 ->whereHas('usuarios');
         }
 
