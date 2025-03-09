@@ -25,7 +25,7 @@ class EmpresaDetalleDTO{
     public function __construct(Empresa $empresa){
         $direccion = $empresa->direccion;
         $horarios = $empresa->horarios;
-        $pasantias = $empresa->pasantias;
+        $pasantias = $empresa->getPasantiasPublicas();
         $usuario = $empresa->usuario;
 
         $this->id = $empresa->id;

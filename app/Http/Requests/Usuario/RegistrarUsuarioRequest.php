@@ -97,7 +97,7 @@ class RegistrarUsuarioRequest extends FormRequest
                 'clave.required' => 'La clave es requerida',
                 'clave.min' => 'La clave debe tener al menos :min caracteres',
                 'clave.max' => 'La clave debe tener hasta :max caracteres',
-                'clave.regex' => 'La clave puede tener letras, números y estos caracteres_ - _',
+                'clave.regex' => 'La clave puede tener letras, números y estos caracteres: - _',
                 'nacimiento.before_or_equal' => 'Debes ser mayor de 18 años.',
                 'dni.required' => 'El DNI es requerido',
                 'dni.regex' => 'DNI inválido',

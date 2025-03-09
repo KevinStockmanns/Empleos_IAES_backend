@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use App\Models\Empresa;
 use App\Models\Usuario;
 use Illuminate\Database\Seeder;
 
@@ -25,7 +26,12 @@ class DatabaseSeeder extends Seeder
         // $this->call(UsuarioSeed::class);
         // $this->call(TituloSeeder::class);
 
-        Usuario::factory(50)->create();
         // $this->call(HabilidadSeeder::class);
+
+
+        // Datos de prueba
+        // Usuario::factory(50)->create();
+
+        Empresa::factory(50)->create();
     }
 }

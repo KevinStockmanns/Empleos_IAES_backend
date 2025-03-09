@@ -40,13 +40,13 @@ class UsuarioDetalleRequest extends FormRequest
     }
 
 
-    public function withValidator($validator): void {
-        $validator->after(function ($validator) {
-            $idUsuario = $this->route('id');  
-            $usuario = auth()->user();
-            $handler = new ValidatorHandler();
-            $handler->addValidator(new UsuarioHasPermission($idUsuario, $usuario));
-            $handler->validate();
-        });
-    }
+    // public function withValidator($validator): void {
+    //     $validator->after(function ($validator) {
+    //         $idUsuario = $this->route('id');  
+    //         $usuario = auth()->user();
+    //         $handler = new ValidatorHandler();
+    //         $handler->addValidator(new UsuarioHasPermission($idUsuario, $usuario));
+    //         $handler->validate();
+    //     });
+    // }
 }

@@ -9,14 +9,14 @@ class PasantiaRespuestaDTO{
     public $id;
     public $fechaInicio;
     public $fechaFinal;
-    public $nota;
+    public $titulo;
 
 
     public function __construct(Pasantia $pasantia, $withUsuario = true, $withEmpresa = true){
         $this->id = $pasantia->id;
+        $this->titulo = $pasantia->titulo;
         $this->fechaInicio = $pasantia->fecha_inicio ? $pasantia->fecha_inicio->format('d/m/Y') : null;
         $this->fechaFinal = $pasantia->fecha_final ? $pasantia->fecha_final->format('d/m/Y') : null;
-        $this->nota = $pasantia->nota ? number_format($pasantia->nota, 2) : null;
 
 
         if( $withEmpresa ){
@@ -24,8 +24,16 @@ class PasantiaRespuestaDTO{
             $this->empresa = $empresa ? new EmpresaRespuestaDTO($empresa) : null;
         }
         if( $withUsuario ){
-            $usuario = $pasantia->usuario;
-            $this->usuario = $usuario ? new UsuarioRespuestaDTO($usuario) : null;
+            $usuarios = $pasantia->usuarios;
+            $this->usuario = $usuarios ? 
+            $usuarios->map(function($usuario){
+                return [
+                    'id'=>$usuario->id,
+                    'nombre'=>$usuario->nombre,
+                    'apellido'=>$usuario->apellido,
+                    'nota'=>$usuario->pivot->nota,
+                ];
+            })  : [];
         }
     }
 }

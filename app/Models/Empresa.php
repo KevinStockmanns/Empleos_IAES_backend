@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\Enums\PasantiaEstadoEnum;
+use DB;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -22,6 +24,15 @@ class Empresa extends Model
 
     public function pasantias(){
         return $this->hasMany(Pasantia::class);
+    }
+    public function getPasantiasPublicas(){
+        return $this->pasantias()->where('estado', PasantiaEstadoEnum::APROBADA->value)
+        ->whereExists(function ($query) {
+            $query->select(DB::raw(1))
+                ->from('pasantias_usuarios') 
+                ->whereColumn('pasantias_usuarios.pasantia_id', 'pasantias.id')
+                ->whereNotNull('pasantias_usuarios.nota'); // Solo si tiene nota no nula
+            })->get();
     }
     public function direccion(){
         return $this->belongsTo(Direccion::class);

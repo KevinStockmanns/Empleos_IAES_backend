@@ -55,6 +55,8 @@ class TituloService{
                         }
                         if(isset($tituloDto['fechaFin'])){
                             $detalle->fecha_final = $tituloDto['fechaFin'];
+                        }else{
+                            $detalle->fecha_final = null;
                         }
                         if(isset($tituloDto['promedio'])){
                             $detalle->promedio = $tituloDto['promedio'];
@@ -97,8 +99,7 @@ class TituloService{
     private function findOrRegistrarTitulo(string $nombre, string $institucion, string|null $alias=null): Titulo{
         return Titulo::firstOrCreate([
             'nombre'=>$nombre,
-            'institucion'=>$institucion,
-            'alias'=>$alias
+            'institucion'=>$institucion
         ]);
     }
 

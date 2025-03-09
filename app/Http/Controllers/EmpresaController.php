@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\DTO\Empresa\EmpresaDetalleDTO;
 use App\DTO\Empresa\EmpresaListadoDTO;
 use App\DTO\Empresa\EmpresaRespuestaDTO;
+use App\DTO\PaginacionDTO;
 use App\DTO\Ubicacion\UbicacionRespuestaDTO;
 use App\Exceptions\CustomException;
 use App\Http\Requests\Empresa\EmpresaCRUDRequest;
@@ -55,11 +56,15 @@ class EmpresaController extends Controller{
         $empresas = $query->paginate($size);
 
 
-        return response()->json([
-            'empresas'=> $empresas->map(function($empresa){
+        return response()->json(new PaginacionDTO(
+            $empresas->map(function($empresa){
                 return new EmpresaListadoDTO($empresa);
-            })
-        ]);
+            }),
+            $size,
+            $page,
+            $empresas->lastPage(),
+            $empresas->total()
+        ));
     }
 
 

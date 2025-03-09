@@ -4,6 +4,7 @@ use App\Enums\CategoriaLicenciaConducirEnum;
 use App\Enums\DisponibilidadEnum;
 use App\Enums\EstadoCivilEnum;
 use App\Enums\GeneroEnum;
+use App\Http\Controllers\Controller;
 use App\Http\Controllers\EmpresaController;
 use App\Http\Controllers\HabilidadController;
 use App\Http\Controllers\PasantiaController;
@@ -44,6 +45,7 @@ Route::prefix('/v1/usuarios')->group(function() {
 
         Route::get('/{id}/detalles', [UsuarioController::class, 'getDetalleUsuario']);
         Route::get('/{id}/completado', [UsuarioController::class, 'getPerfilCompletado']);
+        Route::post('/public-ocult', [UsuarioController::class, 'postEstadoPrivacidad']);
         Route::get("/{id}", [UsuarioController::class, 'obtenerUsuario']);
         Route::put("/{id}", [UsuarioController::class, 'putUsuario']);
         Route::post('/{id}/ubicacion', [UsuarioController::class, 'postUbicacion']);
@@ -61,6 +63,8 @@ Route::prefix('/v1/usuarios')->group(function() {
         Route::post('/{id}/licenciaConducir', [UsuarioController::class, 'postLicenciaConducir'])
             ->middleware('user.access');
         Route::post('/{id}/estado', [UsuarioController::class, 'postEstadoUsuario'])->middleware('admin.access');
+        Route::post('/{id}/clave-restore', [UsuarioController::class, 'restorePassword'])->middleware('admin.access');
+        Route::post('/{id}/change-password', [UsuarioController::class, 'changePassword']);
 
 
         
@@ -101,6 +105,12 @@ Route::prefix('/v1/pasantias')->group(function(){
 Route::prefix('/v1/habilidades')->group(function(){
     Route::middleware('jwt')->group(function(){
         Route::get('/', [HabilidadController::class, 'getHabilidades']);
+    });
+});
+
+Route::prefix('/v1/titulos')->group(function(){
+    Route::middleware('jwt')->group(function(){
+        Route::get('/', [Controller::class, 'listarTitulos']);
     });
 });
 

@@ -36,6 +36,7 @@ use App\Models\Usuario;
 use App\Services\UsuarioService;
 use Auth;
 use Cache;
+use Hash;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use Intervention\Image\Image;
@@ -80,6 +81,63 @@ class UsuarioController extends Controller
         }
 
         return response()->json(new UsuarioRespuestaDTO($usuario));
+    }
+
+
+    public function restorePassword(Request $req, $id=null){
+        if($id){
+            $usuario = Usuario::withTrashed()->find($id);
+            if($usuario){
+                $usuario->update([
+                    'clave'=> Hash::make(($usuario->dni ?? '123456789'))
+                ]);
+                return response()->noContent();
+            }
+        }
+
+        throw new CustomException('No se pudo restablecer la clave.', 400);
+    }
+
+    public function changePassword(Request $req, $id = null){
+        $data = $req->validate([
+            'claveActual'=>'required',
+            'clave'=>'required|min:8|max:20|regex:/^[a-zA-ZñÑ\-_0-9]+$/'
+        ], [
+            'claveActual.required' => 'La clave actual es requerida',
+            'clave.required' => 'La clave es requerida',
+            'clave.min' => 'La clave debe tener al menos :min caracteres',
+            'clave.max' => 'La clave debe tener hasta :max caracteres',
+            'clave.regex' => 'La clave puede tener letras, números y estos caracteres: - _',
+        ]);
+
+
+
+
+
+        if($id){
+
+            if($id != auth()->user()->id){
+                throw new CustomException('No puedes cambiar la clave de otro usuario.', 403);
+            }
+
+            
+            $usuario = Usuario::withTrashed()->find($id);
+            if($usuario){
+                if(!Hash::check($data['claveActual'], $usuario->clave)){
+                    throw new CustomException('La clave actual no coincide.', 403);
+                }
+                if($data['claveActual'] == $data['clave']){
+                    throw new CustomException('La clave debe ser diferente a la actual.', 400);
+                }
+
+                $usuario->update([
+                    'clave'=> Hash::make($data['clave']),
+                ]);
+                return response()->noContent();
+            }
+        }
+
+        throw new CustomException('No se pudo cambiar la clave.', 400);
     }
 
 
@@ -158,6 +216,14 @@ class UsuarioController extends Controller
                 // Caso en que solo venga una edad sin guión
                 $edadExacta = intval($edad);
                 $query->whereRaw("TIMESTAMPDIFF(YEAR, fecha_nacimiento, ?) = ?", [$hoy, $edadExacta]);
+            }
+        }
+        if($req->has('licencia')){
+            $lic = $req->get('licencia');
+            if($lic == 'SI'){
+                $query->whereHas('licenciaConducir');
+            }else{
+                $query->whereDoesntHave('licenciaConducir');
             }
         }
         if($req->has('correo')){
@@ -294,8 +360,19 @@ class UsuarioController extends Controller
     
 
     public function getDetalleUsuario(UsuarioDetalleRequest $request){
+        $authUser = auth()->user();
         $id = $request->validated()['id'];
         $usuario = $this->usuarioService->obtenerById($id);
+
+        if($authUser->isAlumn() && $id != $authUser->id){
+            if($authUser->estado == EstadoUsuarioEnum::PRIVADO->value){
+                throw new CustomException('Para ver otros perfiles debes tener tu perfil público.', 403);
+            }
+            if($usuario->estado == EstadoUsuarioEnum::PRIVADO->value){
+                throw new CustomException('El perfil del usuario es privado.', 403);
+            }
+        }
+
         return response()->json(new UsuarioDetalleDTO($usuario));
     }
 
@@ -416,6 +493,27 @@ class UsuarioController extends Controller
         }
 
         return response()->noContent();
+    }
+
+
+    public function postEstadoPrivacidad(){
+        $user = auth()->user();
+        $estado = $user->estado;
+
+        if($estado == EstadoUsuarioEnum::PRIVADO->value){
+            $completado = $this->usuarioService->calcularPerfilCompletado($user);
+
+            if($completado->completo!=100){
+                throw new CustomException('Para publicar el perfil el estado de la cuenta debe estar al 100%.', 403);
+            }
+        }
+
+        $user->update([
+            'estado' => $estado == EstadoUsuarioEnum::PRIVADO->value ? EstadoUsuarioEnum::PUBLICO->value : EstadoUsuarioEnum::PRIVADO->value
+        ]);
+
+
+        return response()->json($user->estado);
     }
 
 }

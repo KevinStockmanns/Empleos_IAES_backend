@@ -25,6 +25,9 @@ class Usuario extends Authenticatable implements JWTSubject
     public function isAdmin(): bool{
         return ($this->rol->nombre == "ADMIN" || $this->rol->nombre == "DEV");
     }
+    public function isAlumn(): bool{
+        return ($this->rol->nombre == "ALUMNO" || $this->rol->nombre == "EGRESADO");
+    }
 
     public function rol()
     {
