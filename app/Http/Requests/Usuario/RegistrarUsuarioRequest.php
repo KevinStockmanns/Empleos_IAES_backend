@@ -45,7 +45,7 @@ class RegistrarUsuarioRequest extends FormRequest
             'correo' => 'required|email|unique:usuarios,correo',
             'fechaNacimiento' => 'before_or_equal:' . now()->subYears(18)->toDateString(),
             'clave' => 'required|min:8|max:20|regex:/^[a-zA-ZñÑ\-_0-9]+$/',
-            'dni' => 'required|regex:/^[0-9]{7,12}$/|unique:usuarios,dni',
+            'dni' => 'required|regex:/^[0-9]{8,12}$/|unique:usuarios,dni',
             'rol'=> ['required', Rule::in([RolEnum::ALUMNO->value, RolEnum::EGRESADO->value])],
             'estado_civil'=> ['required', Rule::in(array_column(EstadoCivilEnum::cases(), 'value'))],
             'genero'=>['required', Rule::in(array_column(GeneroEnum::cases(), 'value'))]
@@ -98,7 +98,7 @@ class RegistrarUsuarioRequest extends FormRequest
                 'clave.min' => 'La clave debe tener al menos :min caracteres',
                 'clave.max' => 'La clave debe tener hasta :max caracteres',
                 'clave.regex' => 'La clave puede tener letras, números y estos caracteres: - _',
-                'nacimiento.before_or_equal' => 'Debes ser mayor de 18 años.',
+                'fechaNacimiento.before_or_equal' => 'Debes ser mayor de 18 años.',
                 'dni.required' => 'El DNI es requerido',
                 'dni.regex' => 'DNI inválido',
                 'dni.unique' => 'El DNI ya está en uso',
