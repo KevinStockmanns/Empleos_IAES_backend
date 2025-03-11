@@ -27,15 +27,5 @@ class UsuarioRespuestaDTO
         $this->estado = $usuario->estado;
         $this->rol = $usuario->rol->nombre;
         $this->token = $token;
-        
-
-        if($usuario->isAdmin()){
-            logger("deberia cargar admin");
-            $usuariosSolicitados = Usuario::where('estado', EstadoUsuarioEnum::SOLICITADO->value)->count();
-            logger($usuariosSolicitados);
-            if ($usuariosSolicitados > 0) {
-                $this->adminInfo['solicitudUsuarios'] = $usuariosSolicitados;
-            }
-        }
     }
 }

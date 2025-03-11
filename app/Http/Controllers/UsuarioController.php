@@ -281,12 +281,18 @@ class UsuarioController extends Controller
             $usuariosDTO[] = new UsuarioListadoDTO($usuario, $this->usuarioService->calcularPerfilCompletado($usuario));
         }
 
+
+        $solicitudUsuarios = Usuario::where('estado', EstadoUsuarioEnum::SOLICITADO->value)->count();
+
         return response()->json(new PaginacionDTO(
             $usuariosDTO,
             $size,
             $page,
             $usuarios->lastPage(),
-            $usuarios->total()
+            $usuarios->total(),
+            [
+                'solicitudUsuarios'=> $solicitudUsuarios
+            ]
         ));
     }
 

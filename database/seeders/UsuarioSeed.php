@@ -28,7 +28,7 @@ class UsuarioSeed extends Seeder
                 'nombre'=>'SysAdmin',
                 'apellido'=>'SysAdmin',
                 'fecha_nacimiento'=>'2002-03-27',
-                'correo'=>'admin@gmail.com',
+                'correo'=>'kevinfstockmanns@gmail.com',
                 'clave'=>Hash::make('adminadmin'),
                 'rol_id'=> $rol->id,
                 'estado'=> EstadoUsuarioEnum::PRIVADO->value,
