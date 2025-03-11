@@ -113,6 +113,9 @@ class UsuarioService
         if($usuario->estado == EstadoUsuarioEnum::BLOQUEADO->value){
             throw new CustomException('Tu cuenta ha sido suspendida. Por favor comunícate con administración.', 403);
         }
+        if($usuario->estado == EstadoUsuarioEnum::RECHAZADO->value){
+            throw new CustomException('Tu cuenta ha sido rechazada. Por favor comunícate con administración.', 403);
+        }
         if($usuario->trashed()){
             throw new CustomException('Tu cuenta ha sido dada de baja. Por favor comunícate con administración.', 403);
         }

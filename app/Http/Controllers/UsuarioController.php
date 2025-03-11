@@ -457,10 +457,10 @@ class UsuarioController extends Controller
 
     public function postEstadoUsuario(Request $req, $id){
         $data = $req->validate([
-            'accion'=>'required|in:BLOQUEAR,BAJA,ALTA',
+            'accion'=>'required|in:BLOQUEAR,BAJA,ALTA,RECHAZAR',
         ],[
             'accion.required'=>'La acción es requerida.',
-            'accion.in'=>'La acción es solo acepta BLOQUEAR, ALTA o BAJA.',
+            'accion.in'=>'La acción es solo acepta BLOQUEAR, ALTA, BAJA o RECHAZAR.',
         ]);
 
 
@@ -487,6 +487,12 @@ class UsuarioController extends Controller
             if($data['accion'] == 'ALTA'){
                 $usuario->update([
                     'estado'=> EstadoUsuarioEnum::ALTA->value,
+                    'deleted_at'=>null
+                ]);
+            }
+            if($data['accion'] == 'RECHAZAR'){
+                $usuario->update([
+                    'estado'=> EstadoUsuarioEnum::RECHAZADO->value,
                     'deleted_at'=>null
                 ]);
             }

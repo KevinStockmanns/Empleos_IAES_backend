@@ -9,4 +9,5 @@ enum EstadoUsuarioEnum: string{
     case BLOQUEADO = 'BLOQUEADO';
     case ALTA = 'ALTA';
     case BAJA = 'BAJA';
+    case RECHAZADO = 'RECHAZADO';
 }
