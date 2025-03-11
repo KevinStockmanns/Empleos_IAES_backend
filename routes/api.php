@@ -116,9 +116,9 @@ Route::prefix('/v1/titulos')->group(function(){
 
 Route::prefix('/v1/disponiblidad')->group(function(){
     Route::middleware('jwt')->group(function(){
-        Route::get('/', [HabilidadController::class, function(){
+        Route::get('/',  function(){
             return response()->json(array_column(DisponibilidadEnum::cases(), 'value'));
-        }]);
+        });
     });
 });
 
