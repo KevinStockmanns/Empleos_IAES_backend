@@ -8,11 +8,13 @@ class PerfilProfesionalRespuestaDTO{
     public $cartaPresentacion;
     public $disponibilidad;
     public $disponibilidadMudanza;
+    public $cv;
 
     public function __construct(PerfilProfesional $perfil) {
         $this->cargo = $perfil->cargo;
         $this->cartaPresentacion = $perfil->carta_presentacion;
         $this->disponibilidad = $perfil->disponibilidad;
         $this->disponibilidadMudanza = $perfil->disponibilidad_mudanza;
+        $this->cv = $perfil->cv;
     }
 }

@@ -52,6 +52,14 @@ class EmpresaController extends Controller{
             $query->where('nombre', 'like', "%$nombre%")
                 ->orWhere('cuil_cuit', 'like', "%$nombre%");
         }
+        if($req->has('referente')){
+            $ref = $req->get('referente');
+            $query->where('referente', 'like', "%$ref%")
+                ->orWhereHas('usuario',function($user) use($ref){
+                    $user->where('nombre', 'like', "$ref")
+                        ->orWhere('apellido', 'like', "$ref");
+                });
+        }
 
         $empresas = $query->paginate($size);
 
