@@ -284,7 +284,7 @@ class UsuarioService
             ['Ubicación',$usuario->direccion()->exists()],
             ['Educación',$usuario->tituloDetalles()->exists()],
             ['Experiencia Laboral',$usuario->experienciasLaborales()->exists()],
-            ['Currículum', $usuario->perfilProfesional->cv ?? false],
+            // ['Currículum', $usuario->perfilProfesional->cv ?? false],
         ];
 
         $datosTotales = count($datos);
