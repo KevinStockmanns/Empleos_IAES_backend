@@ -374,8 +374,8 @@ class UsuarioController extends Controller
             if($authUser->estado == EstadoUsuarioEnum::PRIVADO->value){
                 throw new CustomException('Para ver otros perfiles debes tener tu perfil público.', 403);
             }
-            if($usuario->estado == EstadoUsuarioEnum::PRIVADO->value){
-                throw new CustomException('El perfil del usuario es privado.', 403);
+            if($usuario->estado != EstadoUsuarioEnum::PUBLICO->value){
+                throw new CustomException('El perfil del usuario no es público.', 403);
             }
         }
 
