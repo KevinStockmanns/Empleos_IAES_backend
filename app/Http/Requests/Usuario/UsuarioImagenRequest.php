@@ -24,7 +24,7 @@ class UsuarioImagenRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'imagen'=>'required|image|mimes:jpeg,png,jpg,webp|extensions:jpeg,jpg,png,webp',
+            'imagen'=>'required|mimes:jpeg,png,jpg,webp|extensions:jpeg,jpg,png,webp',
             'id'=>'required|integer'
         ];
     }

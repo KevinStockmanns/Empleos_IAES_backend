@@ -145,7 +145,7 @@ class UsuarioController extends Controller
         $page = $req->get('page', 1);
         $size = $req->get('size', 15);
 
-        $query = Usuario::query()->withTrashed();
+        $query = Usuario::query();
 
         if (!is_numeric($page) || !is_numeric($size)) {
             throw new CustomException('Los parametros deben ser númericos', 400);
@@ -232,8 +232,16 @@ class UsuarioController extends Controller
         }
         if ($req->has('estado')) {
             $estado = explode(',', $req->get('estado')); 
+
+            if(in_array('BAJA', $estado)){
+                $query->withTrashed();
+            }
             
             $query->whereIn('estado', $estado); 
+        }else{
+            $query->where('estado', '!=', 'BAJA')
+                ->where('estado', '!=', 'BLOQUEADO')
+                ->where('estado', '!=', 'SOLICITADO');
         }
         
         if ($req->has('rol')) {
