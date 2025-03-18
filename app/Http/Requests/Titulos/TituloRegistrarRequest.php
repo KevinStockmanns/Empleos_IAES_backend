@@ -40,7 +40,7 @@ class TituloRegistrarRequest extends FormRequest
 
             'titulos.*.fechaInicio'=> 'date|before:today',
             'titulos.*.fechaFin'=> 'nullable|date',
-            'titulos.*.promedio'=> 'nullable|numeric|min:0|max:10|regex:/^\d{1,2}(\d{1,2})?$/',
+            'titulos.*.promedio'=> 'nullable|numeric|min:0|max:10',
             'titulos.*.tipo'=>[
                 // 'required',
                 Rule::in(array_column(TituloTipoEnum::cases(), 'value'))

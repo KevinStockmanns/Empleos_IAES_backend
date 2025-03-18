@@ -188,10 +188,13 @@ class UsuarioController extends Controller
 
             $query->whereHas('tituloDetalles.titulo', function($tit) use($educacion){
                 $tit->where('nombre', 'like', "%$educacion%");
-            })
-                ->orWhereHas('habilidades', function($hab) use($educacion){
-                    $hab->where('nombre', 'like', "%$educacion%");
-                });
+            });
+        }
+        if($req->has('habilidad')){
+            $habilidad = $req->get('habilidad');
+            $query->whereHas('habilidades', function($hab) use($habilidad){
+                $hab->where('nombre', 'like', "%$habilidad%");
+            });
         }
         if ($req->has('edad')) {
             $edad = $req->get('edad');

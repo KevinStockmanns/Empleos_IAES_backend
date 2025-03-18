@@ -93,7 +93,7 @@ class TituloService{
         }
 
         $usuario->load('tituloDetalles');
-        return $tituloDetalles;
+        return $usuario->tituloDetalles;
     }
 
     private function findOrRegistrarTitulo(string $nombre, string $institucion, string|null $alias=null): Titulo{
