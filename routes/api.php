@@ -114,6 +114,12 @@ Route::prefix('/v1/titulos')->group(function(){
     });
 });
 
+Route::prefix('/v1/habilidades')->group(function(){
+    Route::middleware('jwt')->group(function(){
+        Route::get('/', [Controller::class, 'listarHabilidades']);
+    });
+});
+
 Route::prefix('/v1/disponiblidad')->group(function(){
     Route::middleware('jwt')->group(function(){
         Route::get('/',  function(){

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\DTO\PaginacionDTO;
 use App\DTO\Titulo\TituloListadoDTO;
+use App\Models\Habilidad;
 use App\Models\Titulo;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Validation\ValidatesRequests;
@@ -30,5 +31,21 @@ class Controller extends BaseController
             1,
             $titulos->count()
         ));
+    }
+
+
+
+    public function listarHabilidades(){
+        $habilidades = Habilidad::where('visible', true)
+            ->withCount('usuarios')
+            ->orderBy('usuarios_count', 'desc')
+            ->get();
+
+        return response()->json($habilidades->map(function($hab){
+            return [
+                'nombre'=>$hab->nombre,
+                'tipo'=>$hab->tipo,
+            ];
+        }));
     }
 }

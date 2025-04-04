@@ -7,11 +7,12 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
+use OwenIt\Auditing\Contracts\Auditable;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 
-class Usuario extends Authenticatable implements JWTSubject
+class Usuario extends Authenticatable implements JWTSubject, Auditable
 {
-    use HasFactory, SoftDeletes;
+    use HasFactory, SoftDeletes, \OwenIt\Auditing\Auditable;
 
     protected $table = 'usuarios';
     public $timestamps = true;
@@ -20,6 +21,9 @@ class Usuario extends Authenticatable implements JWTSubject
 
 
     public $guarded = ['id'];
+
+
+    // protected $auditExclude = ['ultimo_inicio'];
 
 
     public function isAdmin(): bool{

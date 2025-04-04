@@ -191,9 +191,20 @@ class UsuarioController extends Controller
             });
         }
         if($req->has('habilidad')){
-            $habilidad = $req->get('habilidad');
-            $query->whereHas('habilidades', function($hab) use($habilidad){
-                $hab->where('nombre', 'like', "%$habilidad%");
+            $habilidades = explode(',', $req->get('habilidad'));
+    
+            $query->whereHas('habilidades', function($hab) use($habilidades){
+                $hab->where(function($query) use($habilidades){
+                    foreach($habilidades as $index => $habilidad){
+                        $habilidad = trim($habilidad);
+                        
+                        if($index === 0){
+                            $query->where('nombre', 'like', "%$habilidad%");
+                        } else {
+                            $query->orWhere('nombre', 'like', "%$habilidad%");
+                        }
+                    }
+                });
             });
         }
         if ($req->has('edad')) {
@@ -286,6 +297,7 @@ class UsuarioController extends Controller
         $usuarios = $query->paginate($size, ['*'],'page', $page);
 
 
+        logger($usuarios);
 
         $usuariosDTO = [];
         foreach ($usuarios->items() as $usuario) {
