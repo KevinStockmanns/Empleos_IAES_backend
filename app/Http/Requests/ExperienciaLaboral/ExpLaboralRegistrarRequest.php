@@ -28,7 +28,7 @@ class ExpLaboralRegistrarRequest extends FormRequest
             'id'=>['required', 'integer', new OwnerOrAdmin],
             'experienciaLaboral'=>'required|array|min:1',
             'experienciaLaboral.*.puesto'=>'string|min:3|max:50|regex:/^[a-zA-Z0-9ñÑáéíóúÁÉÍÓÚ\s]+$/',
-            'experienciaLaboral.*.empresa'=>'string|min:3|max:50|regex:/^[a-zA-Z0-9ñÑáéíóúÁÉÍÓÚ\s]+$/',
+            'experienciaLaboral.*.empresa'=>'string|min:3|max:50',
             'experienciaLaboral.*.idEmpresa'=>'nullable|integer',
             'experienciaLaboral.*.descripcion' => 'nullable|string|min:15|max:500',
             'experienciaLaboral.*.fechaInicio'=>'date|before:today',

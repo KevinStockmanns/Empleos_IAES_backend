@@ -350,7 +350,7 @@ class UsuarioService
             if($expDto['accion'] == AccionCrudEnum::AGREGAR->value){
                 $expLab = ExperienciaLaboral::create([
                     'puesto'=> $expDto['puesto'],
-                    'empresa'=> $expDto['empresa'] ?? $empresa->nombre,
+                    'empresa'=>$empresa ? $empresa->nombre : $expDto['empresa'],
                     'fecha_inicio'=> $expDto['fechaInicio'],
                     'fecha_terminacion'=> $expDto['fechaTerminacion'] ?? null,
                     'descripcion'=> $expDto['descripcion'] ?? null,
